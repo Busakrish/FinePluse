@@ -5,6 +5,7 @@ import { RecommendationEngine } from '../engines/recommendation.js';
 import { FinancialStressEngine } from '../engines/stress.js';
 import { WhatIfEngine } from '../engines/whatif.js';
 import { LifeEventPredictionService } from './lifeEventPrediction.service.js';
+import { SpendingCoachService } from './spendingCoach.service.js';
 
 export interface GeminiChatPayload {
   message: string;
@@ -206,6 +207,7 @@ export class GeminiService {
             promotional_marketing: true,
           },
       life_event_predictions: LifeEventPredictionService.predictForCustomer(customerId).predictions,
+      spending_coach: SpendingCoachService.getCoachData(customerId).data,
       banking_services: {
         upi_daily_limit: 100000,
         emergency_fraud_helpline: '1800-425-0018 (24x7 Toll-Free Bharat Banking)',
@@ -445,15 +447,26 @@ ADVANCED BANKING COPILOT CAPABILITIES:
       - Clearly explain "Why FinPulse detected this" citing real transactional or balance evidence.
       - Provide the proactive product recommendation and next action.
 
-12. Out of Scope / Fallback:
+12. Feature 10: AI Spending Coach:
+    - When user asks about spending patterns, categories, overspending, saving opportunities, spending forecasts, or budgeting advice ("How am I spending this month?", "Where did I spend the most money?", "Am I overspending?", "How can I save more money?", "Compare this month with last month", "Show my spending categories", "What's my biggest expense?"):
+      - Ground your response in the verified data under "spending_coach":
+        * Monthly overview: Total spent (₹${verifiedSnapshot.spending_coach?.overview?.total_spent_this_month || 0}), Income (₹${verifiedSnapshot.spending_coach?.overview?.total_income_this_month || 0}), Savings ratio (${verifiedSnapshot.spending_coach?.overview?.savings_ratio || 0}%).
+        * Category breakdown: Cite the highest category, exact amounts, and month-over-month comparison (+X% / -Y%).
+        * Overspending alerts: If overspending alerts exist, explain why they were triggered (e.g. food delivery spike, shopping surge) with practical, gentle guidance.
+        * Smart saving opportunities: Quote specific savings recommendations with estimated monthly savings (e.g. save ₹1,600 on food delivery, save ₹2,000 on shopping).
+        * Spending forecast: Projected month-end spend, remaining budget, and days until budget exhaustion.
+        * Budget Health meter: Level (${verifiedSnapshot.spending_coach?.budget_health?.level || 'HEALTHY'}), score (${verifiedSnapshot.spending_coach?.budget_health?.score || 75}/100), and reason.
+      - NEVER recommend loans or debt to someone in stress. Focus purely on savings, budgeting discipline, and expense moderation.
+
+13. Out of Scope / Fallback:
     - If the request is totally unrelated to banking (e.g. general trivia, poetry): Politely say: "I'm FinPulse AI, your dedicated banking assistant for Bharat. I can assist you with your accounts, loans, UPI payments, fraud protection, investments, and financial health." Do not answer general trivia.
 
-13. Response Format:
+14. Response Format:
     Output ONLY a valid JSON object with NO surrounding markdown backticks (no \`\`\`json):
     {
       "message": "Friendly, empathetic, conversational response with clear markdown formatting (bold key numbers in Indian currency format like ₹1,42,500).",
       "language": "en" | "hi" | "gu",
-      "intent": "CHECK_BALANCE" | "CHECK_LOANS_EMI" | "CHECK_TRANSACTIONS" | "FINANCIAL_HEALTH" | "FINANCIAL_ADVICE" | "INVESTMENT_GUIDANCE" | "INSURANCE_GUIDANCE" | "FRAUD_SECURITY" | "UPI_HELP" | "STRESS_ASSISTANCE" | "CONSENT_QUERY" | "WHAT_IF_LOAN" | "WEEKLY_SPENDING_SUMMARY" | "UPCOMING_EVENTS" | "FINANCIAL_COACH" | "OPPORTUNITY_DETECTOR" | "LIFE_EVENT_PREDICTION" | "GENERAL_BANKING" | "OUT_OF_SCOPE",
+      "intent": "CHECK_BALANCE" | "CHECK_LOANS_EMI" | "CHECK_TRANSACTIONS" | "FINANCIAL_HEALTH" | "FINANCIAL_ADVICE" | "INVESTMENT_GUIDANCE" | "INSURANCE_GUIDANCE" | "FRAUD_SECURITY" | "UPI_HELP" | "STRESS_ASSISTANCE" | "CONSENT_QUERY" | "WHAT_IF_LOAN" | "WEEKLY_SPENDING_SUMMARY" | "UPCOMING_EVENTS" | "FINANCIAL_COACH" | "OPPORTUNITY_DETECTOR" | "LIFE_EVENT_PREDICTION" | "SPENDING_COACH" | "GENERAL_BANKING" | "OUT_OF_SCOPE",
       "verified_data": { ...key figures actually cited in response... },
       "proactive_insight": "1-2 sentence smart proactive insight relevant to the query topic",
       "coaching_advice": {
@@ -514,6 +527,7 @@ ${userQuery}
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(bodyPayload),
+          signal: AbortSignal.timeout(6000),
         });
 
         if (!res.ok) {

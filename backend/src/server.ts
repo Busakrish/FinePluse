@@ -15,6 +15,7 @@ import loanRoutes from './routes/loan.routes.js';
 import consentRoutes from './routes/consent.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import lifeEventsRoutes from './routes/lifeEvents.routes.js';
+import spendingRoutes from './routes/spending.routes.js';
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use('/api/loans', loanRoutes);
 app.use('/api/consents', consentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/life-events', lifeEventsRoutes);
+app.use('/api/spending', spendingRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

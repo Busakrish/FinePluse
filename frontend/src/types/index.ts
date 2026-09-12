@@ -201,3 +201,110 @@ export interface LifeEventPredictionResponse {
   predictions: LifeEventPrediction[];
   generated_at: string;
 }
+
+export interface SpendingOverview {
+  total_spent_this_month: number;
+  total_income_this_month: number;
+  total_saved_this_month: number;
+  savings_ratio: number;
+  spending_score: number;
+  insight_summary: string;
+}
+
+export interface SpendingCategoryBreakdown {
+  category: string;
+  amount: number;
+  percentage: number;
+  previous_month_amount: number;
+  change_percentage: number;
+  transaction_count: number;
+  ai_explanation: string;
+}
+
+export interface OverspendingAlert {
+  id: string;
+  category: string;
+  severity: 'HIGH' | 'MEDIUM';
+  title: string;
+  message: string;
+  excess_amount: number;
+  reason: string;
+}
+
+export interface SavingOpportunity {
+  id: string;
+  title: string;
+  category: string;
+  why_recommendation: string;
+  estimated_monthly_savings: number;
+  action_cta: string;
+  action_route: string;
+}
+
+export interface WeeklySpendingTrend {
+  current_week_total: number;
+  previous_week_total: number;
+  week_over_week_change_percentage: number;
+  biggest_increase: { category: string; change_percentage: number };
+  biggest_decrease: { category: string; change_percentage: number };
+  weekly_breakdown: { period: string; amount: number }[];
+  ai_weekly_insight: string;
+}
+
+export interface SpendingForecast {
+  projected_spending: number;
+  monthly_budget: number;
+  budget_remaining: number;
+  days_until_budget_exhaustion: number | null;
+  burn_rate_daily: number;
+  status: 'ON_TRACK' | 'AT_RISK' | 'OVER_BUDGET';
+  narrative: string;
+}
+
+export interface BudgetHealth {
+  level: 'EXCELLENT' | 'HEALTHY' | 'WARNING' | 'CRITICAL';
+  score: number;
+  spending_ratio: number;
+  savings_ratio: number;
+  emi_burden_ratio: number;
+  explanation: string;
+}
+
+export interface BudgetCoachTip {
+  id: string;
+  title: string;
+  category: string;
+  why_it_matters: string;
+  financial_impact: string;
+  easy_action_today: string;
+}
+
+export interface SpendingChallenge {
+  id: string;
+  title: string;
+  description: string;
+  duration_days: number;
+  progress_percentage: number;
+  money_saved: number;
+  reward_badge: string;
+  status: 'IN_PROGRESS' | 'COMPLETED' | 'AVAILABLE';
+}
+
+export interface SpendingCoachPayload {
+  overview: SpendingOverview;
+  categories: SpendingCategoryBreakdown[];
+  overspending_alerts: OverspendingAlert[];
+  saving_opportunities: SavingOpportunity[];
+  weekly_trends: WeeklySpendingTrend;
+  forecast: SpendingForecast;
+  budget_health: BudgetHealth;
+  budget_coach_tips: BudgetCoachTip[];
+  challenges: SpendingChallenge[];
+}
+
+export interface SpendingCoachResponse {
+  customer_id: string;
+  consent_restricted: boolean;
+  data: SpendingCoachPayload | null;
+  generated_at: string;
+}

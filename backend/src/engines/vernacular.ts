@@ -2,6 +2,7 @@ import { db } from '../db/database.js';
 import { CustomerProfile, Account, Transaction, Loan, FinancialTwin } from '../db/types.js';
 
 import { GeminiService, ChatHistoryItem } from '../services/gemini.service.js';
+import { SpendingCoachService } from '../services/spendingCoach.service.js';
 
 export interface VernacularChatResponse {
   message: string;
@@ -164,6 +165,136 @@ export class VernacularEngine {
         } else {
           responseText = `Your total monthly EMI commitment is ₹${totalEmi.toLocaleString('en-IN')}.\nActive Loans:\n${loanSummariesEn}\n${twin?.dont_sell_me_active ? '⚠️ Notice: You qualify for empathetic restructuring under our Samadhan Relief Program.' : ''}`;
           suggestedActions = ['Simulate What-If', 'Explore Debt Restructuring'];
+        }
+      }
+    }
+
+    // Intent: AI Spending Coach & Expense Analytics
+    else if (
+      q.includes('where did i spend') ||
+      q.includes('spend the most') ||
+      q.includes('biggest expense') ||
+      q.includes('highest expense') ||
+      q.includes('how am i spending') ||
+      q.includes('overspending') ||
+      q.includes('overspend') ||
+      q.includes('budgeting advice') ||
+      q.includes('budget advice') ||
+      q.includes('budget coach') ||
+      q.includes('save more money') ||
+      q.includes('how can i save') ||
+      q.includes('spending coach') ||
+      q.includes('spending summary') ||
+      q.includes('spending breakdown') ||
+      q.includes('spending categories') ||
+      q.includes('compare this month') ||
+      q.includes('burn rate') ||
+      q.includes('saving opportunities') ||
+      q.includes('સૌથી વધુ ખર્ચ') ||
+      q.includes('ખર્ચ ક્યાં') ||
+      q.includes('વધારે ખર્ચ') ||
+      q.includes('બજેટ સલાહ') ||
+      q.includes('સર્વાધિક ખર્ચ') ||
+      q.includes('सर्वाधिक व्यय') ||
+      q.includes('सर्वाधिक खर्च') ||
+      q.includes('खर्च कहाँ') ||
+      q.includes('अधिक खर्च') ||
+      q.includes('बजट सलाह') ||
+      q.includes('पैसे कैसे बचाएं')
+    ) {
+      intent = 'SPENDING_COACH';
+      const coachRes = SpendingCoachService.getCoachData(customerId);
+
+      if (coachRes.consent_restricted) {
+        if (lang === 'gu') {
+          responseText = `🔒 DPDPA 2023 સંમતિ નિયમો હેઠળ, તમારી "ટ્રાન્ઝેક્શન વિશ્લેષણ" સંમતિ બંધ છે. AI Spending Coach વિશ્લેષણ જોવા માટે કૃપા કરીને સંમતિ કેન્દ્રમાં તેને સક્ષમ કરો.`;
+          suggestedActions = ['સંમતિ સેટિંગ્સ ખોલો', 'મારું બેલેન્સ'];
+        } else if (lang === 'hi') {
+          responseText = `🔒 DPDPA 2023 सहमति नियमों के तहत, आपका "लेन-देन विश्लेषण" अक्षम है। AI Spending Coach की कोचिंग और बचत सलाह देखने हेतु कृपया सहमति केंद्र में अनुमति सक्रिय करें।`;
+          suggestedActions = ['सहमति सेटिंग्स खोलें', 'मेरा बैलेंस'];
+        } else {
+          responseText = `🔒 Under DPDPA 2023 Consent rules, Transaction Analysis is currently disabled in your Consent Center. Please enable it to view AI Spending Coach analytics and personalized savings advice.`;
+          suggestedActions = ['Manage Consent Settings', 'Check Balance'];
+        }
+        verifiedData = { consent_restricted: true };
+      } else if (coachRes.data) {
+        const d = coachRes.data;
+        const highestCat = d.categories[0] || { category: 'Shopping', amount: 0, change_percentage: 0, percentage: 0 };
+        const secondCat = d.categories[1] || null;
+        const alerts = d.overspending_alerts || [];
+        const opps = d.saving_opportunities || [];
+        const tips = d.budget_coach_tips || [];
+
+        verifiedData = {
+          total_spent_this_month: d.overview.total_spent_this_month,
+          total_income_this_month: d.overview.total_income_this_month,
+          savings_ratio: d.overview.savings_ratio,
+          spending_score: d.overview.spending_score,
+          highest_category: highestCat,
+          overspending_alerts_count: alerts.length,
+          burn_rate_daily: d.forecast.burn_rate_daily,
+          projected_spending: d.forecast.projected_spending,
+          budget_health_level: d.budget_health.level,
+        };
+
+        const isOverspendingQuery = q.includes('overspend') || q.includes('अधिक खर्च') || q.includes('વધારે ખર્ચ');
+        const isWhereSpentQuery = q.includes('where') || q.includes('most') || q.includes('biggest') || q.includes('highest') || q.includes('ક્યાં') || q.includes('कहाँ');
+        const isAdviceQuery = q.includes('advice') || q.includes('save') || q.includes('coach') || q.includes('सलाह') || q.includes('સલાહ') || q.includes('बचाएं');
+
+        if (isWhereSpentQuery) {
+          if (lang === 'gu') {
+            responseText = `📊 આ મહિને તમારો સૌથી મોટો ખર્ચ **${highestCat.category}** માં થયો છે: **₹${highestCat.amount.toLocaleString('en-IN')}** (${highestCat.percentage}% કુલ ખર્ચમાંથી, ગયા મહિના કરતાં ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}%).\n${secondCat ? `• બીજો મોટો ખર્ચ: **${secondCat.category}** (₹${secondCat.amount.toLocaleString('en-IN')})\n` : ''}💡 કોચ ટીપ: ${opps[0]?.why_recommendation || d.overview.insight_summary}`;
+          } else if (lang === 'hi') {
+            responseText = `📊 इस माह आपका सर्वाधिक व्यय **${highestCat.category}** श्रेणी में हुआ है: **₹${highestCat.amount.toLocaleString('en-IN')}** (कुल खर्च का ${highestCat.percentage}%, पिछले माह से ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}%).\n${secondCat ? `• दूसरा बड़ा खर्च: **${secondCat.category}** (₹${secondCat.amount.toLocaleString('en-IN')})\n` : ''}💡 कोच सुझाव: ${opps[0]?.why_recommendation || d.overview.insight_summary}`;
+          } else {
+            responseText = `📊 Your highest expenditure this month is in **${highestCat.category}** at **₹${highestCat.amount.toLocaleString('en-IN')}** (${highestCat.percentage}% of total outflows, ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}% MoM change).\n${secondCat ? `• 2nd highest: **${secondCat.category}** (₹${secondCat.amount.toLocaleString('en-IN')})\n` : ''}💡 Coach Advice: ${opps[0]?.why_recommendation || d.overview.insight_summary}`;
+          }
+        } else if (isOverspendingQuery) {
+          if (alerts.length > 0) {
+            const topAlert = alerts[0];
+            if (lang === 'gu') {
+              responseText = `⚠️ **ઓવરસ્પેન્ડિંગ એલર્ટ**: ${topAlert.title}!\n${topAlert.message}\n• અંદાજિત વધારાનો ખર્ચ: **₹${topAlert.excess_amount.toLocaleString('en-IN')}**\n• દૈનિક ખર્ચ વેગ: **₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/દિવસ**\n• બજેટ સ્વાસ્થ્ય સ્કોર: **${d.budget_health.score}/100** (${d.budget_health.level})`;
+            } else if (lang === 'hi') {
+              responseText = `⚠️ **अति-व्यय (Overspending) चेतावनी**: ${topAlert.title}!\n${topAlert.message}\n• अनुमानित अतिरिक्त खर्च: **₹${topAlert.excess_amount.toLocaleString('en-IN')}**\n• दैनिक व्यय दर: **₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/दिन**\n• बजट स्वास्थ्य स्कोर: **${d.budget_health.score}/100** (${d.budget_health.level})`;
+            } else {
+              responseText = `⚠️ **Overspending Detected**: ${topAlert.title}!\n${topAlert.message}\n• Estimated Outflow Surge: **₹${topAlert.excess_amount.toLocaleString('en-IN')}**\n• Daily Burn Rate: **₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/day**\n• Budget Health: **${d.budget_health.score}/100** (${d.budget_health.level})`;
+            }
+          } else {
+            if (lang === 'gu') {
+              responseText = `✅ કોઈ ઓવરસ્પેન્ડિંગ વિસંગતતા નથી! તમારો ખર્ચ નિયંત્રણમાં છે (માસિક આવકના ${d.budget_health.spending_ratio}%). બચત દર: **${d.overview.savings_ratio}%**.`;
+            } else if (lang === 'hi') {
+              responseText = `✅ कोई अति-व्यय नहीं मिला! आपका खर्च संतुलित है (मासिक आय का ${d.budget_health.spending_ratio}%). बचत अनुपात: **${d.overview.savings_ratio}%**.`;
+            } else {
+              responseText = `✅ No abnormal overspending detected! Your expenses are well-disciplined at ${d.budget_health.spending_ratio}% of income with a healthy **${d.overview.savings_ratio}%** savings ratio.`;
+            }
+          }
+        } else if (isAdviceQuery) {
+          const topOpp = opps[0];
+          const topTip = tips[0];
+          if (lang === 'gu') {
+            responseText = `💡 **AI Spending Coach બજેટિંગ સલાહ**:\n1. **${topOpp?.title || 'ખર્ચ મર્યાદા'}**: ${topOpp?.why_recommendation || 'બિનજરૂરી ઓનલાઇન ઓર્ડર નિયંત્રિત કરો.'} (સંભવિત બચત: **₹${topOpp?.estimated_monthly_savings?.toLocaleString('en-IN') || '1,500'}/મહિને**)\n2. **${topTip?.title || 'બચત આદત'}**: ${topTip?.easy_action_today || 'પગાર જમા થતાં જ SIP શરૂ કરો.'}\n• વર્તમાન બજેટ સ્થિતિ: **${d.budget_health.level}** (${d.budget_health.score}/100)`;
+          } else if (lang === 'hi') {
+            responseText = `💡 **AI Spending Coach बजटिंग सलाह**:\n1. **${topOpp?.title || 'व्यय नियंत्रण'}**: ${topOpp?.why_recommendation || 'अनावश्यक डिलीवरी और सप्ताहांत खर्च सीमित करें।'} (संभावित बचत: **₹${topOpp?.estimated_monthly_savings?.toLocaleString('en-IN') || '1,500'}/माह**)\n2. **${topTip?.title || 'बचत नियम'}**: ${topTip?.easy_action_today || 'वेतन आते ही ऑटो-डेबिट बचत शुरू करें।'}\n• वर्तमान बजट स्वास्थ्य: **${d.budget_health.level}** (${d.budget_health.score}/100)`;
+          } else {
+            responseText = `💡 **AI Spending Coach Budgeting Guidance**:\n1. **${topOpp?.title || 'Spending Control'}**: ${topOpp?.why_recommendation || 'Prune non-essential online delivery orders.'} (Estimated Monthly Savings: **₹${topOpp?.estimated_monthly_savings?.toLocaleString('en-IN') || '1,500'}/month**)\n2. **${topTip?.title || 'Behavioral Habit'}**: ${topTip?.easy_action_today || 'Automate savings on salary credit day.'}\n• Budget Health: **${d.budget_health.level}** (${d.budget_health.score}/100)`;
+          }
+        } else {
+          // General overview & MoM
+          if (lang === 'gu') {
+            responseText = `📈 **સપ્ટેમ્બર ખર્ચ વિશ્લેષણ**:\n• કુલ ખર્ચ: **₹${d.overview.total_spent_this_month.toLocaleString('en-IN')}** (આવક: ₹${d.overview.total_income_this_month.toLocaleString('en-IN')})\n• બચત દર: **${d.overview.savings_ratio}%** | બજેટ સ્કોર: **${d.budget_health.score}/100**\n• સૌથી મોટો ખર્ચ: **${highestCat.category}** (₹${highestCat.amount.toLocaleString('en-IN')}, ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}% MoM)\n• દૈનિક ખર્ચ વેગ: ₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/દિવસ (અંદાજિત માસિક ખર્ચ: ₹${d.forecast.projected_spending.toLocaleString('en-IN')})`;
+          } else if (lang === 'hi') {
+            responseText = `📈 **सितंबर व्यय विश्लेषण रिपोर्ट**:\n• कुल खर्च: **₹${d.overview.total_spent_this_month.toLocaleString('en-IN')}** (आय: ₹${d.overview.total_income_this_month.toLocaleString('en-IN')})\n• बचत अनुपात: **${d.overview.savings_ratio}%** | बजट स्कोर: **${d.budget_health.score}/100**\n• शीर्ष श्रेणी: **${highestCat.category}** (₹${highestCat.amount.toLocaleString('en-IN')}, ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}% MoM)\n• दैनिक खर्च दर: ₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/दिन (प्रत्याशित कुल: ₹${d.forecast.projected_spending.toLocaleString('en-IN')})`;
+          } else {
+            responseText = `📈 **September Spending Diagnostics**:\n• Total Outflow: **₹${d.overview.total_spent_this_month.toLocaleString('en-IN')}** (Inflow: ₹${d.overview.total_income_this_month.toLocaleString('en-IN')})\n• Savings Ratio: **${d.overview.savings_ratio}%** | Budget Score: **${d.budget_health.score}/100** (${d.budget_health.level})\n• Top Outflow: **${highestCat.category}** (₹${highestCat.amount.toLocaleString('en-IN')}, ${highestCat.change_percentage >= 0 ? '+' : ''}${highestCat.change_percentage}% MoM)\n• Daily Burn Rate: ₹${d.forecast.burn_rate_daily.toLocaleString('en-IN')}/day (Projected: ₹${d.forecast.projected_spending.toLocaleString('en-IN')})`;
+          }
+        }
+
+        if (lang === 'gu') {
+          suggestedActions = ['સૌથી વધુ ખર્ચ ક્યાં થયો?', 'શું હું વધુ ખર્ચ કરી રહ્યો છું?', 'વધુ બચત કેવી રીતે કરવી?'];
+        } else if (lang === 'hi') {
+          suggestedActions = ['सर्वाधिक खर्च कहाँ हुआ?', 'क्या मैं अधिक खर्च कर रहा हूँ?', 'बचत के उपाय बताओ'];
+        } else {
+          suggestedActions = ['Where did I spend the most?', 'Am I overspending?', 'How can I save more money?'];
         }
       }
     }

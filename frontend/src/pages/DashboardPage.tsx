@@ -34,6 +34,7 @@ import { GuardianPill } from '../components/GuardianPill';
 import { DontSellMeBanner } from '../components/DontSellMeBanner';
 import { ExplainModal } from '../components/ExplainModal';
 import { LifeEventPredictionWidget } from '../components/LifeEventPredictionWidget';
+import { SpendingCoachWidget } from '../components/SpendingCoachWidget';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -275,6 +276,9 @@ export const DashboardPage: React.FC = () => {
 
       {/* Upcoming Financial Life Events - Proactive Milestone Intelligence */}
       <LifeEventPredictionWidget />
+
+      {/* AI Spending Coach - Real-time Overspending Alerts & Coaching */}
+      <SpendingCoachWidget />
 
       {/* Two Column Layout: Recommendations & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -3,7 +3,7 @@
     {
       "id": "usr_rahul",
       "email": "rahul@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-01-10T10:00:00.000Z",
       "updated_at": "2026-01-10T10:00:00.000Z"
@@ -11,7 +11,7 @@
     {
       "id": "usr_priya",
       "email": "priya@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-01-12T11:00:00.000Z",
       "updated_at": "2026-01-12T11:00:00.000Z"
@@ -19,7 +19,7 @@
     {
       "id": "usr_amit",
       "email": "amit@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-01-15T09:30:00.000Z",
       "updated_at": "2026-01-15T09:30:00.000Z"
@@ -27,7 +27,7 @@
     {
       "id": "usr_vikram",
       "email": "vikram@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-01-20T14:15:00.000Z",
       "updated_at": "2026-01-20T14:15:00.000Z"
@@ -35,7 +35,7 @@
     {
       "id": "usr_ramesh",
       "email": "ramesh@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-02-01T08:45:00.000Z",
       "updated_at": "2026-02-01T08:45:00.000Z"
@@ -43,7 +43,7 @@
     {
       "id": "usr_sunita",
       "email": "sunita@finpulse.bharat",
-      "password_hash": "$2a$10$kGHdF6jN18FMdyd/URSGauADsYoshgTYspGdOfum3jJVR963CsqZy",
+      "password_hash": "$2a$10$XfmwBwooLLisfBfConBUxO5dQqnfVH18FggZKt6JP6J9hYsjIYwke",
       "role": "CUSTOMER",
       "created_at": "2026-02-05T12:00:00.000Z",
       "updated_at": "2026-02-05T12:00:00.000Z"
@@ -51,7 +51,7 @@
     {
       "id": "usr_admin",
       "email": "admin@finpulse.bharat",
-      "password_hash": "$2a$10$Ll3f5hKknpexAf4EhhE.1unShTO5zXiYF8PUb/nZR0zg/gGEmmz1K",
+      "password_hash": "$2a$10$QdxcOtvp842G/5HHaBb8LOYwOR38NTatNyxZOiVbH3lcIxKcZgVDO",
       "role": "ADMIN",
       "created_at": "2026-01-01T00:00:00.000Z",
       "updated_at": "2026-01-01T00:00:00.000Z"
@@ -156,11 +156,11 @@
       "account_number": "50100492817281",
       "ifsc_code": "BHAR0002918",
       "account_type": "SALARY",
-      "balance": 140100,
+      "balance": 142500,
       "upi_id": "rahul.verma@bharatpay",
       "status": "ACTIVE",
       "created_at": "2026-01-10T10:00:00.000Z",
-      "updated_at": "2026-09-12T08:58:54.293Z"
+      "updated_at": "2026-01-10T10:00:00.000Z"
     },
     {
       "id": "acc_priya",
@@ -300,6 +300,141 @@
       "created_at": "2026-09-10T12:00:00.000Z"
     },
     {
+      "id": "tx_r_06",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 1450,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Swiggy Gourmet Indore",
+      "merchant_name": "Swiggy",
+      "reference_id": "UPI/SWG/20260906/7712",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-06T20:30:00.000Z"
+    },
+    {
+      "id": "tx_r_07",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 8450,
+      "type": "DEBIT",
+      "category": "Shopping",
+      "description": "Myntra Weekend Fashion Apparels",
+      "merchant_name": "Myntra Designs",
+      "reference_id": "UPI/MYN/20260907/6612",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-07T16:15:00.000Z"
+    },
+    {
+      "id": "tx_r_08",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 3200,
+      "type": "DEBIT",
+      "category": "Fuel & Transport",
+      "description": "Indian Oil Fuel Station Indore",
+      "merchant_name": "Indian Oil Corp",
+      "reference_id": "UPI/IOC/20260909/8821",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-09T08:45:00.000Z"
+    },
+    {
+      "id": "tx_r_09",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 649,
+      "type": "DEBIT",
+      "category": "Entertainment",
+      "description": "Netflix Premium Monthly Subscription",
+      "merchant_name": "Netflix Entertainment",
+      "reference_id": "UPI/REC/20260902/5512",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-02T11:00:00.000Z"
+    },
+    {
+      "id": "tx_r_10",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 1100,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Zomato Food Order Dinner",
+      "merchant_name": "Zomato Ltd",
+      "reference_id": "UPI/ZOM/20260911/4491",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-11T21:10:00.000Z"
+    },
+    {
+      "id": "tx_r_prev_01",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 85000,
+      "type": "CREDIT",
+      "category": "Salary",
+      "description": "Monthly Salary Credit - Tech Corp Ltd",
+      "merchant_name": "Tech Corp Ltd",
+      "reference_id": "UPI/SAL/20260801/9182",
+      "payment_method": "NEFT",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-01T09:00:00.000Z"
+    },
+    {
+      "id": "tx_r_prev_02",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 6400,
+      "type": "DEBIT",
+      "category": "Shopping",
+      "description": "Amazon Electronics & Accessories",
+      "merchant_name": "Amazon Seller Services",
+      "reference_id": "UPI/AMZ/20260812/2219",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-12T14:30:00.000Z"
+    },
+    {
+      "id": "tx_r_prev_03",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 1950,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Weekend Dining BBQ Nation",
+      "merchant_name": "Barbeque Nation",
+      "reference_id": "UPI/POS/20260815/9981",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-15T21:00:00.000Z"
+    },
+    {
+      "id": "tx_r_prev_04",
+      "account_id": "acc_rahul",
+      "customer_id": "cust_rahul",
+      "amount": 3600,
+      "type": "DEBIT",
+      "category": "Fuel & Transport",
+      "description": "Indian Oil Fuel Refill",
+      "merchant_name": "Indian Oil Corp",
+      "reference_id": "UPI/IOC/20260818/1129",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-18T10:00:00.000Z"
+    },
+    {
       "id": "tx_a_01",
       "account_id": "acc_amit",
       "customer_id": "cust_amit",
@@ -373,6 +508,51 @@
       "status": "COMPLETED",
       "is_anomaly": false,
       "created_at": "2026-09-09T19:10:00.000Z"
+    },
+    {
+      "id": "tx_a_06",
+      "account_id": "acc_amit",
+      "customer_id": "cust_amit",
+      "amount": 1200,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Zomato Food Delivery Meerut",
+      "merchant_name": "Zomato Ltd",
+      "reference_id": "UPI/ZOM/20260906/1192",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-06T13:30:00.000Z"
+    },
+    {
+      "id": "tx_a_07",
+      "account_id": "acc_amit",
+      "customer_id": "cust_amit",
+      "amount": 1450,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Swiggy Late Night Order",
+      "merchant_name": "Swiggy",
+      "reference_id": "UPI/SWG/20260908/9981",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-08T23:15:00.000Z"
+    },
+    {
+      "id": "tx_a_prev_01",
+      "account_id": "acc_amit",
+      "customer_id": "cust_amit",
+      "amount": 1800,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Dining August",
+      "merchant_name": "Local Restaurant",
+      "reference_id": "UPI/POS/20260814/7711",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-14T20:00:00.000Z"
     },
     {
       "id": "tx_v_01",
@@ -510,19 +690,109 @@
       "created_at": "2026-09-05T06:00:00.000Z"
     },
     {
-      "id": "tx_sim_1789203534295_r9se",
-      "account_id": "acc_rahul",
-      "customer_id": "cust_rahul",
-      "amount": 2400,
+      "id": "tx_p_01",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 45000,
+      "type": "CREDIT",
+      "category": "Salary",
+      "description": "Monthly Salary Credit - Surat Retail Mall",
+      "merchant_name": "Surat Retail Corp",
+      "reference_id": "UPI/SAL/20260901/3382",
+      "payment_method": "NEFT",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-01T10:00:00.000Z"
+    },
+    {
+      "id": "tx_p_02",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 4500,
       "type": "DEBIT",
       "category": "Groceries",
-      "description": "Weekly Provision Purchase to Bharat Supermarket Terminal #42",
-      "merchant_name": "Bharat Supermarket Terminal #42",
-      "reference_id": "UPI/SIM/03534295",
+      "description": "Supermarket Provisions Surat",
+      "merchant_name": "Reliance Smart Surat",
+      "reference_id": "UPI/REL/20260903/1182",
       "payment_method": "UPI",
       "status": "COMPLETED",
       "is_anomaly": false,
-      "created_at": "2026-09-12T08:58:54.295Z"
+      "created_at": "2026-09-03T17:30:00.000Z"
+    },
+    {
+      "id": "tx_p_03",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 3200,
+      "type": "DEBIT",
+      "category": "Shopping",
+      "description": "Apparel & Festive Sarees Surat",
+      "merchant_name": "Surat Textile Market",
+      "reference_id": "UPI/TEX/20260906/4491",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-06T15:00:00.000Z"
+    },
+    {
+      "id": "tx_p_04",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 2100,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "Weekend Dining Sasuma Gujarati Thali",
+      "merchant_name": "Sasuma Thali Surat",
+      "reference_id": "UPI/POS/20260907/6618",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-07T20:45:00.000Z"
+    },
+    {
+      "id": "tx_p_05",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 1800,
+      "type": "DEBIT",
+      "category": "Utilities",
+      "description": "DGVCL Torrent Power Electricity",
+      "merchant_name": "Torrent Power",
+      "reference_id": "UPI/TOR/20260908/9912",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-09-08T11:00:00.000Z"
+    },
+    {
+      "id": "tx_p_prev_01",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 2500,
+      "type": "DEBIT",
+      "category": "Shopping",
+      "description": "August Clothing Store Surat",
+      "merchant_name": "Local Boutique",
+      "reference_id": "UPI/POS/20260815/5512",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-15T16:00:00.000Z"
+    },
+    {
+      "id": "tx_p_prev_02",
+      "account_id": "acc_priya",
+      "customer_id": "cust_priya",
+      "amount": 1500,
+      "type": "DEBIT",
+      "category": "Food & Dining",
+      "description": "August Dining Out",
+      "merchant_name": "Restaurant Surat",
+      "reference_id": "UPI/POS/20260820/8812",
+      "payment_method": "UPI",
+      "status": "COMPLETED",
+      "is_anomaly": false,
+      "created_at": "2026-08-20T21:00:00.000Z"
     }
   ],
   "loans": [
@@ -675,43 +945,41 @@
       "id": "twin_rahul",
       "customer_id": "cust_rahul",
       "monthly_income": 85000,
-      "monthly_expenses": 36700,
-      "monthly_savings": 21800,
-      "monthly_emi_burden": 26500,
-      "savings_ratio": 25.65,
-      "expense_ratio": 43.18,
-      "emi_to_income_ratio": 31.18,
+      "monthly_expenses": 38000,
+      "monthly_savings": 35000,
+      "monthly_emi_burden": 12000,
+      "savings_ratio": 41.18,
+      "expense_ratio": 44.71,
+      "emi_to_income_ratio": 14.12,
       "savings_growth_rate": 15.5,
-      "financial_health_score": 77,
-      "financial_health_tier": "GOOD",
+      "financial_health_score": 92,
+      "financial_health_tier": "EXCELLENT",
       "stress_level": "LOW",
-      "stress_score": 5,
-      "behavioral_segment": "ASPIRATIONAL_BORROWER",
+      "stress_score": 12,
+      "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:18:48.050Z",
-      "updated_at": "2026-09-12T09:18:48.050Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.510Z"
     },
     {
       "id": "twin_priya",
       "customer_id": "cust_priya",
       "monthly_income": 45000,
-      "monthly_expenses": 29250,
-      "monthly_savings": 1250,
-      "monthly_emi_burden": 14500,
-      "savings_ratio": 2.78,
-      "expense_ratio": 65,
-      "emi_to_income_ratio": 32.22,
-      "savings_growth_rate": 12,
-      "financial_health_score": 49,
-      "financial_health_tier": "FAIR",
+      "monthly_expenses": 30000,
+      "monthly_savings": 8000,
+      "monthly_emi_burden": 7000,
+      "savings_ratio": 17.78,
+      "expense_ratio": 66.67,
+      "emi_to_income_ratio": 15.56,
+      "savings_growth_rate": 4.2,
+      "financial_health_score": 68,
+      "financial_health_tier": "GOOD",
       "stress_level": "LOW",
-      "stress_score": 5,
-      "behavioral_segment": "TRANSACTIONAL_USER",
+      "stress_score": 32,
+      "behavioral_segment": "ASPIRATIONAL_BORROWER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:19:00.769Z",
-      "updated_at": "2026-09-12T09:19:00.769Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.511Z"
     },
     {
       "id": "twin_amit",
@@ -731,28 +999,27 @@
       "behavioral_segment": "VULNERABLE_BORROWER",
       "dont_sell_me_active": true,
       "guardian_status": "HELP",
-      "last_evaluated_at": "2026-09-12T08:26:23.693Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.511Z"
     },
     {
       "id": "twin_vikram",
       "customer_id": "cust_vikram",
       "monthly_income": 70000,
-      "monthly_expenses": 87250,
-      "monthly_savings": 0,
-      "monthly_emi_burden": 14500,
-      "savings_ratio": 0,
-      "expense_ratio": 124.64,
-      "emi_to_income_ratio": 20.71,
-      "savings_growth_rate": 12,
-      "financial_health_score": 53,
-      "financial_health_tier": "FAIR",
+      "monthly_expenses": 28000,
+      "monthly_savings": 22000,
+      "monthly_emi_burden": 0,
+      "savings_ratio": 31.43,
+      "expense_ratio": 40,
+      "emi_to_income_ratio": 0,
+      "savings_growth_rate": 8,
+      "financial_health_score": 79,
+      "financial_health_tier": "GOOD",
       "stress_level": "LOW",
-      "stress_score": 5,
+      "stress_score": 22,
       "behavioral_segment": "TRANSACTIONAL_USER",
       "dont_sell_me_active": false,
       "guardian_status": "PROTECT",
-      "last_evaluated_at": "2026-09-12T09:32:31.178Z",
-      "updated_at": "2026-09-12T09:32:31.178Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.511Z"
     },
     {
       "id": "twin_ramesh",
@@ -772,28 +1039,27 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T08:26:23.693Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.511Z"
     },
     {
       "id": "twin_sunita",
       "customer_id": "cust_sunita",
       "monthly_income": 55000,
-      "monthly_expenses": 6000,
-      "monthly_savings": 34500,
-      "monthly_emi_burden": 14500,
-      "savings_ratio": 62.73,
-      "expense_ratio": 10.91,
-      "emi_to_income_ratio": 26.36,
-      "savings_growth_rate": 12,
-      "financial_health_score": 85,
+      "monthly_expenses": 31000,
+      "monthly_savings": 18000,
+      "monthly_emi_burden": 6000,
+      "savings_ratio": 32.73,
+      "expense_ratio": 56.36,
+      "emi_to_income_ratio": 10.91,
+      "savings_growth_rate": 10,
+      "financial_health_score": 84,
       "financial_health_tier": "EXCELLENT",
       "stress_level": "LOW",
-      "stress_score": 5,
-      "behavioral_segment": "ASPIRATIONAL_BORROWER",
+      "stress_score": 18,
+      "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T08:30:11.760Z",
-      "updated_at": "2026-09-12T08:30:11.760Z"
+      "last_evaluated_at": "2026-09-12T09:45:06.511Z"
     }
   ],
   "ai_insights": [
@@ -1026,505 +1292,8 @@
     }
   ],
   "chat_sessions": [],
-  "chat_messages": [
-    {
-      "id": "msg_u_1789203578553",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "Upcoming Financial Events",
-      "intent_detected": "GENERAL_HELP",
-      "language": "en",
-      "created_at": "2026-09-12T08:59:38.553Z"
-    },
-    {
-      "id": "msg_a_1789203578554",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "I am your FinPulse AI assistant for Bharat. You can ask me about your account balance (\"What is my balance?\"), active EMIs (\"Show my loans\"), recent payments, or financial advice in English, Hindi, or Gujarati.",
-      "intent_detected": "GENERAL_HELP",
-      "verified_data_used": {},
-      "language": "en",
-      "created_at": "2026-09-12T08:59:38.553Z"
-    },
-    {
-      "id": "msg_u_1789203826638",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "hello",
-      "intent_detected": "GENERAL_HELP",
-      "language": "en",
-      "created_at": "2026-09-12T09:03:46.638Z"
-    },
-    {
-      "id": "msg_a_1789203826639",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "I am your FinPulse AI assistant for Bharat. You can ask me about your account balance (\"What is my balance?\"), active EMIs (\"Show my loans\"), recent payments, or financial advice in English, Hindi, or Gujarati.",
-      "intent_detected": "GENERAL_HELP",
-      "verified_data_used": {},
-      "language": "en",
-      "created_at": "2026-09-12T09:03:46.638Z"
-    },
-    {
-      "id": "msg_u_1789203915155",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "Am I eligible for a home loan soon based on my rent and savings?",
-      "intent_detected": "CHECK_EMI",
-      "language": "en",
-      "created_at": "2026-09-12T09:05:15.155Z"
-    },
-    {
-      "id": "msg_a_1789203915156",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Your total monthly EMI commitment is ₹12,000.\nActive Loans:\n• VEHICLE Loan: ₹12,000/month (Due: 5th)\n",
-      "intent_detected": "CHECK_EMI",
-      "verified_data_used": {
-        "active_loans_count": 1,
-        "total_monthly_emi": 12000,
-        "loans_breakdown": [
-          {
-            "type": "VEHICLE",
-            "emi": 12000,
-            "due_day": 5,
-            "status": "ACTIVE",
-            "outstanding": 280000
-          }
-        ]
-      },
-      "language": "en",
-      "created_at": "2026-09-12T09:05:15.155Z"
-    },
-    {
-      "id": "msg_u_1789204668576",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "What investment or savings opportunities are recommended for my profile?",
-      "intent_detected": "FINANCIAL_HEALTH",
-      "language": "en",
-      "created_at": "2026-09-12T09:17:48.576Z"
-    },
-    {
-      "id": "msg_a_1789204668577",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Your Financial Health Score is 77/100 (GOOD) with a savings ratio of 25.65%. Your financial discipline is exemplary!",
-      "intent_detected": "FINANCIAL_HEALTH",
-      "verified_data_used": {
-        "health_score": 77,
-        "stress_level": "LOW",
-        "savings_ratio": 25.65
-      },
-      "language": "en",
-      "created_at": "2026-09-12T09:17:48.576Z"
-    },
-    {
-      "id": "msg_u_1789204697373",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "what i can do with my bank balance",
-      "intent_detected": "CHECK_BALANCE",
-      "language": "en",
-      "created_at": "2026-09-12T09:18:17.374Z"
-    },
-    {
-      "id": "msg_a_1789204697375",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Your current available balance in SALARY Account (...7281) is ₹1,40,100.",
-      "intent_detected": "CHECK_BALANCE",
-      "verified_data_used": {
-        "account_number": "50100492817281",
-        "account_type": "SALARY",
-        "available_balance": 140100
-      },
-      "language": "en",
-      "created_at": "2026-09-12T09:18:17.374Z"
-    },
-    {
-      "id": "msg_u_1789204711697",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "Send Money (UPI)",
-      "intent_detected": "GENERAL_HELP",
-      "language": "en",
-      "created_at": "2026-09-12T09:18:31.697Z"
-    },
-    {
-      "id": "msg_a_1789204711698",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "I am your FinPulse AI assistant for Bharat. You can ask me about your account balance (\"What is my balance?\"), active EMIs (\"Show my loans\"), recent payments, or financial advice in English, Hindi, or Gujarati.",
-      "intent_detected": "GENERAL_HELP",
-      "verified_data_used": {},
-      "language": "en",
-      "created_at": "2026-09-12T09:18:31.697Z"
-    },
-    {
-      "id": "msg_u_1789205426511",
-      "session_id": "ses_cust_vikram",
-      "sender": "USER",
-      "content": "Am I eligible for a home loan soon based on my rent and savings?",
-      "intent_detected": "CHECK_EMI",
-      "language": "en",
-      "created_at": "2026-09-12T09:30:26.511Z"
-    },
-    {
-      "id": "msg_a_1789205426512",
-      "session_id": "ses_cust_vikram",
-      "sender": "ASSISTANT",
-      "content": "You currently have no active loans or pending EMI obligations.",
-      "intent_detected": "CHECK_EMI",
-      "verified_data_used": {
-        "active_loans_count": 0,
-        "total_monthly_emi": 0,
-        "loans_breakdown": []
-      },
-      "language": "en",
-      "created_at": "2026-09-12T09:30:26.511Z"
-    },
-    {
-      "id": "msg_u_1789205458349",
-      "session_id": "ses_cust_vikram",
-      "sender": "USER",
-      "content": "i want to buy car or bike wat sholud i buy",
-      "intent_detected": "GENERAL_HELP",
-      "language": "en",
-      "created_at": "2026-09-12T09:30:58.349Z"
-    },
-    {
-      "id": "msg_a_1789205458350",
-      "session_id": "ses_cust_vikram",
-      "sender": "ASSISTANT",
-      "content": "I am your FinPulse AI assistant for Bharat. You can ask me about your account balance (\"What is my balance?\"), active EMIs (\"Show my loans\"), recent payments, or financial advice in English, Hindi, or Gujarati.",
-      "intent_detected": "GENERAL_HELP",
-      "verified_data_used": {},
-      "language": "en",
-      "created_at": "2026-09-12T09:30:58.349Z"
-    },
-    {
-      "id": "msg_u_1789205489822",
-      "session_id": "ses_cust_vikram",
-      "sender": "USER",
-      "content": "Show my active EMIs",
-      "intent_detected": "CHECK_EMI",
-      "language": "en",
-      "created_at": "2026-09-12T09:31:29.822Z"
-    },
-    {
-      "id": "msg_a_1789205489823",
-      "session_id": "ses_cust_vikram",
-      "sender": "ASSISTANT",
-      "content": "You currently have no active loans or pending EMI obligations.",
-      "intent_detected": "CHECK_EMI",
-      "verified_data_used": {
-        "active_loans_count": 0,
-        "total_monthly_emi": 0,
-        "loans_breakdown": []
-      },
-      "language": "en",
-      "created_at": "2026-09-12T09:31:29.822Z"
-    }
-  ],
-  "what_if_simulations": [
-    {
-      "id": "sim_1789203571332_75ce",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T08:59:31.332Z"
-    },
-    {
-      "id": "sim_1789203571344_smnz",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T08:59:31.344Z"
-    },
-    {
-      "id": "sim_1789203878391_oqr1",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:04:38.391Z"
-    },
-    {
-      "id": "sim_1789203878401_isdz",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:04:38.402Z"
-    },
-    {
-      "id": "sim_1789204724048_brtr",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:18:44.048Z"
-    },
-    {
-      "id": "sim_1789204724055_tmcr",
-      "customer_id": "cust_rahul",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 21800,
-        "monthly_emi": 26500,
-        "monthly_surplus": 21800,
-        "debt_burden_percent": 31.2,
-        "financial_health_score": 77,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 85000,
-        "monthly_expenses": 36700,
-        "monthly_savings": 5549,
-        "monthly_emi": 42751,
-        "monthly_surplus": 5549,
-        "debt_burden_percent": 50.3,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 50.3% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:18:44.055Z"
-    },
-    {
-      "id": "sim_1789205493133_nyy9",
-      "customer_id": "cust_vikram",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 70000,
-        "monthly_expenses": 87250,
-        "monthly_savings": 0,
-        "monthly_emi": 14500,
-        "monthly_surplus": -31750,
-        "debt_burden_percent": 20.7,
-        "financial_health_score": 53,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 70000,
-        "monthly_expenses": 87250,
-        "monthly_savings": 0,
-        "monthly_emi": 30751,
-        "monthly_surplus": -48001,
-        "debt_burden_percent": 43.9,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 43.9% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:31:33.133Z"
-    },
-    {
-      "id": "sim_1789205493140_dszm",
-      "customer_id": "cust_vikram",
-      "simulation_type": "TAKE_LOAN",
-      "input_params": {
-        "loan_amount": 500000,
-        "interest_rate": 10.5,
-        "tenure_months": 36,
-        "income_delta_percent": -20,
-        "expense_reduction_amount": 3000,
-        "monthly_savings_increase": 5000
-      },
-      "current_metrics": {
-        "monthly_income": 70000,
-        "monthly_expenses": 87250,
-        "monthly_savings": 0,
-        "monthly_emi": 14500,
-        "monthly_surplus": -31750,
-        "debt_burden_percent": 20.7,
-        "financial_health_score": 53,
-        "stress_level": "LOW"
-      },
-      "simulated_metrics": {
-        "monthly_income": 70000,
-        "monthly_expenses": 87250,
-        "monthly_savings": 0,
-        "monthly_emi": 30751,
-        "monthly_surplus": -48001,
-        "debt_burden_percent": 43.9,
-        "financial_health_score": 32,
-        "stress_level": "HIGH",
-        "new_emi_amount": 16251
-      },
-      "safety_assessment": "HIGH_RISK",
-      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 43.9% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:31:33.140Z"
-    }
-  ],
+  "chat_messages": [],
+  "what_if_simulations": [],
   "notifications": [
     {
       "id": "notif_rahul_01",
@@ -1610,25 +1379,6 @@
       "policy_decision": "FLAGGED",
       "final_action_taken": "Flagged transaction for multi-factor authorization and notified customer.",
       "timestamp": "2026-09-11T02:46:00.000Z"
-    },
-    {
-      "id": "audit_1789203534298_mfkeu",
-      "timestamp": "2026-09-12T08:58:54.298Z",
-      "customer_id": "cust_rahul",
-      "event_type": "SIMULATED_PAYMENT",
-      "ai_engine": "SAFETY_GATEWAY",
-      "input_summary": {
-        "amount": 2400,
-        "recipientUpiId": "pos.terminal42@bharatpay",
-        "category": "Groceries"
-      },
-      "engine_output": {
-        "tx_id": "tx_sim_1789203534295_r9se",
-        "new_balance": 140100,
-        "fraud_flag": false
-      },
-      "policy_decision": "ALLOWED",
-      "final_action_taken": "Completed simulated transaction & refreshed Financial Twin in real-time."
     }
   ]
 }

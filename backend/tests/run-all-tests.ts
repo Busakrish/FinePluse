@@ -10,6 +10,7 @@ import { SafetyPolicyGateway } from '../src/safety/gateway.js';
 import { NextBestActionEngine } from '../src/safety/nextBestAction.js';
 import { FinancialTwinManager } from '../src/twin/twinManager.js';
 import { LifeEventPredictionService } from '../src/services/lifeEventPrediction.service.js';
+import { SpendingCoachService } from '../src/services/spendingCoach.service.js';
 
 let passedCount = 0;
 let failedCount = 0;
@@ -199,6 +200,88 @@ async function runAcceptanceTests() {
   if (rahulConsent) {
     db.update('consents', rahulConsent.id, { personalized_recommendations: true });
   }
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 12: Spending Coach Category Aggregation & MoM Calculations
+  // ----------------------------------------------------
+  const rahulCoach = SpendingCoachService.getCoachData('cust_rahul');
+  const rahulCategories = rahulCoach.data?.categories || [];
+  const shoppingCat = rahulCategories.find((c) => c.category === 'Shopping');
+  const foodCat = rahulCategories.find((c) => c.category === 'Food & Dining');
+
+  const categoriesAggregated = rahulCategories.length >= 4;
+  const momVarianceCalculated = shoppingCat !== undefined && shoppingCat.change_percentage !== 0;
+  const overviewValid =
+    rahulCoach.data !== null &&
+    rahulCoach.data.overview.total_spent_this_month > 0 &&
+    rahulCoach.data.overview.total_income_this_month === 85000;
+
+  assert(
+    !rahulCoach.consent_restricted && categoriesAggregated && momVarianceCalculated && overviewValid,
+    'TEST 12: Spending Coach category aggregation and month-over-month variance calculations are verified & deterministic',
+    `Categories: ${rahulCategories.length}, Shopping MoM: ${shoppingCat?.change_percentage}%, Total Spent: ₹${rahulCoach.data?.overview.total_spent_this_month}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 13: Overspending Detection & Budget Health Scoring
+  // ----------------------------------------------------
+  const amitCoach = SpendingCoachService.getCoachData('cust_amit');
+  const amitData = amitCoach.data;
+
+  const rahulHealth = rahulCoach.data?.budget_health;
+  const amitHealth = amitData?.budget_health;
+
+  const rahulIsHealthy = rahulHealth?.level === 'HEALTHY' || rahulHealth?.level === 'EXCELLENT';
+  const amitIsStressed = amitHealth?.level === 'CRITICAL' || amitHealth?.level === 'WARNING';
+  const amitHasOverspendingAlerts = (amitData?.overspending_alerts.length || 0) > 0;
+  const amitDebtRestructureSuggested = amitData?.saving_opportunities.some(
+    (o) => o.category === 'EMI & Loans' || o.id.includes('samadhan')
+  );
+
+  assert(
+    rahulIsHealthy && amitIsStressed && amitHasOverspendingAlerts && amitDebtRestructureSuggested,
+    'TEST 13: Overspending anomaly detection and budget health scoring accurately distinguish healthy vs stressed personas',
+    `Rahul Level: ${rahulHealth?.level} (${rahulHealth?.score}), Amit Level: ${amitHealth?.level} (${amitHealth?.score}), Alerts: ${amitData?.overspending_alerts.length}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 14: DPDPA Consent Privacy Enforcement for Spending Coach
+  // ----------------------------------------------------
+  const consentRecord = db.findOne('consents', (c) => c.customer_id === 'cust_rahul');
+  if (consentRecord) {
+    db.update('consents', consentRecord.id, { transaction_analysis: false });
+  }
+
+  const suppressedCoach = SpendingCoachService.getCoachData('cust_rahul');
+  const coachStrictlySuppressed = suppressedCoach.consent_restricted === true && suppressedCoach.data === null;
+
+  assert(
+    coachStrictlySuppressed,
+    'TEST 14: DPDPA Consent enforcement: disabling transaction analysis consent strictly suppresses spending coach data',
+    `Consent restricted: ${suppressedCoach.consent_restricted}, Data is null: ${suppressedCoach.data === null}`
+  );
+
+  // Restore consent
+  if (consentRecord) {
+    db.update('consents', consentRecord.id, { transaction_analysis: true });
+  }
+
+  // Conversational Assistant Chat Verification
+  const chatQ1 = VernacularEngine.processQuery('cust_rahul', 'Where did I spend the most money?');
+  const chatQ2 = VernacularEngine.processQuery('cust_rahul', 'Am I overspending on food or shopping?');
+  const chatQ3 = VernacularEngine.processQuery('cust_rahul', 'Give me practical budgeting advice.');
+
+  const chatGrounded =
+    chatQ1.intent === 'SPENDING_COACH' &&
+    chatQ1.message.includes(chatQ1.verified_data.highest_category.category) &&
+    chatQ2.intent === 'SPENDING_COACH' &&
+    chatQ3.intent === 'SPENDING_COACH';
+
+  assert(
+    chatGrounded,
+    'TEST 14b: Conversational Assistant responds to spending coach queries with grounded data',
+    `Q1: ${chatQ1.intent} (${chatQ1.verified_data.highest_category.category}), Q2: ${chatQ2.intent}, Q3: ${chatQ3.intent}`
+  );
 
   // ----------------------------------------------------
   // SUMMARY

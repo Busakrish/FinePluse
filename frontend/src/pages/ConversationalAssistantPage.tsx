@@ -256,12 +256,14 @@ export const ConversationalAssistantPage: React.FC = () => {
 
   // Quick Action Exploration Pills
   const quickFeaturePills = [
+    { label: '💰 How Am I Spending?', query: 'How am I spending this month? Please give me an AI spending coaching report.' },
+    { label: '⚠️ Am I Overspending?', query: 'Am I overspending on food or shopping this month?' },
+    { label: '📉 How to Save More?', query: 'How can I save more money? Give me practical budgeting advice.' },
+    { label: '📊 Compare MoM Spending', query: 'Compare this month with last month. Where did I spend the most money?' },
     { label: '🎯 Upcoming Life Events', query: 'What life events have you detected for me and what should I prepare for next?' },
     { label: '🏡 Home Loan Readiness', query: 'Am I eligible for a home loan soon based on my rent and savings?' },
     { label: '🛡️ Why Insurance?', query: 'Why are you recommending insurance or emergency medical protection for me?' },
-    { label: '📊 Weekly Spending Report', query: 'Where did I spend the most this week? Give me my spending summary.' },
     { label: '📅 Upcoming Payments Timeline', query: 'What are my upcoming payments, bills, and expected salary this month?' },
-    { label: '💡 AI Financial Coaching', query: 'How can I improve my financial health and save more money?' },
     { label: '🚀 Opportunity Detector', query: 'What investment or savings opportunities are recommended for my profile?' },
     { label: '🇮🇳 "Mera EMI kitna hai?"', query: 'Mera EMI kitna hai aur kab due hai?' },
     { label: '🇮🇳 "Maru balance ketlu che?"', query: 'Maru account balance ketlu che?' },
