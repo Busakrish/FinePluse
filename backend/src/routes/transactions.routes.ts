@@ -6,8 +6,11 @@ const router = Router();
 
 // GET /api/transactions
 router.get('/', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
-  if (!customerId && req.user?.role !== 'ADMIN') {
+  let customerId = req.user?.customerId;
+  if (!customerId && req.user?.role === 'ADMIN') {
+    customerId = 'cust_rahul';
+  }
+  if (!customerId) {
     return res.status(400).json({ success: false, error: 'No customer profile associated.' });
   }
 

@@ -7,9 +7,13 @@ const router = Router();
 
 // GET /api/customers/me
 router.get('/me', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  let customerId = req.user?.customerId;
   if (!customerId) {
-    return res.status(400).json({ success: false, error: 'No associated customer profile.' });
+    if (req.user?.role === 'ADMIN') {
+      customerId = 'cust_rahul';
+    } else {
+      return res.status(400).json({ success: false, error: 'No associated customer profile.' });
+    }
   }
 
   const profile = db.findById('customer_profiles', customerId);

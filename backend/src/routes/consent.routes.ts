@@ -6,8 +6,15 @@ const router = Router();
 
 // GET /api/consents/my
 router.get('/my', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
-  if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile found.' });
+  let customerId = req.user?.customerId;
+  if (!customerId) {
+    // If admin is inspecting consent center, default to cust_rahul as benchmark profile
+    if (req.user?.role === 'ADMIN') {
+      customerId = 'cust_rahul';
+    } else {
+      return res.status(400).json({ success: false, error: 'No customer profile found.' });
+    }
+  }
 
   let consent = db.findOne('consents', (c) => c.customer_id === customerId);
   if (!consent) {
@@ -28,8 +35,14 @@ router.get('/my', authenticate, (req: AuthenticatedRequest, res: Response): any 
 
 // PUT /api/consents/update
 router.put('/update', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
-  if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile found.' });
+  let customerId = req.user?.customerId;
+  if (!customerId) {
+    if (req.user?.role === 'ADMIN') {
+      customerId = 'cust_rahul';
+    } else {
+      return res.status(400).json({ success: false, error: 'No customer profile found.' });
+    }
+  }
 
   const {
     transaction_analysis,
@@ -38,9 +51,18 @@ router.put('/update', authenticate, (req: AuthenticatedRequest, res: Response): 
     marketing_personalization,
   } = req.body;
 
-  const existing = db.findOne('consents', (c) => c.customer_id === customerId);
+  let existing = db.findOne('consents', (c) => c.customer_id === customerId);
   if (!existing) {
-    return res.status(404).json({ success: false, error: 'Consent profile not found.' });
+    existing = {
+      id: `con_${customerId}`,
+      customer_id: customerId,
+      transaction_analysis: true,
+      financial_health_analysis: true,
+      personalized_recommendations: true,
+      marketing_personalization: true,
+      updated_at: new Date().toISOString(),
+    };
+    db.insert('consents', existing);
   }
 
   const updated = db.update('consents', existing.id, {
@@ -48,6 +70,7 @@ router.put('/update', authenticate, (req: AuthenticatedRequest, res: Response): 
     financial_health_analysis: typeof financial_health_analysis === 'boolean' ? financial_health_analysis : existing.financial_health_analysis,
     personalized_recommendations: typeof personalized_recommendations === 'boolean' ? personalized_recommendations : existing.personalized_recommendations,
     marketing_personalization: typeof marketing_personalization === 'boolean' ? marketing_personalization : existing.marketing_personalization,
+    updated_at: new Date().toISOString(),
   });
 
   // Log Privacy & Consent change audit
