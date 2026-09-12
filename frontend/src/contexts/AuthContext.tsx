@@ -15,13 +15,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Clear any legacy permanent auto-login token from localStorage to guarantee login is required
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('finpulse_token');
+  }
+
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('finpulse_token'));
+  const [token, setToken] = useState<string | null>(sessionStorage.getItem('finpulse_token'));
   const [loading, setLoading] = useState<boolean>(true);
 
   const refreshUser = async () => {
-    const storedToken = localStorage.getItem('finpulse_token');
-    if (!storedToken) {
+    const activeToken = sessionStorage.getItem('finpulse_token');
+    if (!activeToken) {
       setUser(null);
       setToken(null);
       setLoading(false);
@@ -32,15 +37,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await api.get('/auth/me');
       if (res.data.success && res.data.user) {
         setUser(res.data.user);
-        setToken(storedToken);
+        setToken(activeToken);
       } else {
-        localStorage.removeItem('finpulse_token');
+        sessionStorage.removeItem('finpulse_token');
         setToken(null);
         setUser(null);
       }
     } catch (err) {
-      console.warn('Session expired or invalid token:', err);
-      localStorage.removeItem('finpulse_token');
+      console.warn('Session invalid or expired:', err);
+      sessionStorage.removeItem('finpulse_token');
       setToken(null);
       setUser(null);
     } finally {
@@ -56,8 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const res = await api.post('/auth/login', { email, password });
-      if (res.data.success) {
-        localStorage.setItem('finpulse_token', res.data.token);
+      if (res.data.success && res.data.user) {
+        sessionStorage.setItem('finpulse_token', res.data.token);
         setToken(res.data.token);
         setUser(res.data.user);
         return { success: true, user: res.data.user };
@@ -77,8 +82,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const res = await api.post('/auth/switch-scenario', { personaTag });
-      if (res.data.success) {
-        localStorage.setItem('finpulse_token', res.data.token);
+      if (res.data.success && res.data.user) {
+        sessionStorage.setItem('finpulse_token', res.data.token);
         setToken(res.data.token);
         setUser(res.data.user);
         return true;
@@ -92,6 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    sessionStorage.removeItem('finpulse_token');
     localStorage.removeItem('finpulse_token');
     setToken(null);
     setUser(null);

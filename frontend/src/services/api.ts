@@ -8,7 +8,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('finpulse_token');
+  const token = sessionStorage.getItem('finpulse_token') || localStorage.getItem('finpulse_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -20,6 +20,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.warn('Session expired or unauthorized');
+      sessionStorage.removeItem('finpulse_token');
+      localStorage.removeItem('finpulse_token');
     }
     return Promise.reject(error);
   }
