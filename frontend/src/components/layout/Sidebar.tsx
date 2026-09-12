@@ -68,7 +68,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 min-h-[calc(100vh-65px)] shadow-xs">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 sticky top-[65px] h-[calc(100vh-65px)] overflow-y-auto shadow-xs">
       <div className="space-y-6">
         {isAdmin ? (
           /* ADMIN PORTAL NAVIGATION */

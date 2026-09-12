@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, ShieldCheck, ShieldAlert, KeyRound, Eye, EyeOff, Building2, HelpCircle, CheckCircle } from 'lucide-react';
+import { Lock, Mail, ShieldCheck, ShieldAlert, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const LoginPage: React.FC = () => {
-  const { login, loading } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
 
   // 'CUSTOMER' or 'ADMIN' login mode
   const [activeTab, setActiveTab] = useState<'CUSTOMER' | 'ADMIN'>('CUSTOMER');
@@ -30,11 +31,18 @@ export const LoginPage: React.FC = () => {
       setError('Please enter your registered email and password.');
       return;
     }
-    const result = await login(custEmail.trim(), custPassword);
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.error || 'Invalid credentials. Please verify your email and password.');
+    setSubmitting(true);
+    try {
+      const result = await login(custEmail.trim(), custPassword);
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.error || 'Invalid email or password. Please try again.');
+      }
+    } catch {
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -45,15 +53,22 @@ export const LoginPage: React.FC = () => {
       setError('Please enter your official bank email and security token.');
       return;
     }
-    const result = await login(adminEmail.trim(), adminPassword);
-    if (result.success) {
-      if (result.user?.role === 'ADMIN') {
-        navigate('/admin');
+    setSubmitting(true);
+    try {
+      const result = await login(adminEmail.trim(), adminPassword);
+      if (result.success) {
+        if (result.user?.role === 'ADMIN') {
+          navigate('/admin');
+        } else {
+          setError('Access Denied: This account does not possess Admin/CRO privileges.');
+        }
       } else {
-        setError('Access Denied: This account does not possess Admin/CRO privileges.');
+        setError(result.error || 'Invalid administrative credentials.');
       }
-    } else {
-      setError(result.error || 'Invalid administrative credentials.');
+    } catch {
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -189,17 +204,20 @@ export const LoginPage: React.FC = () => {
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold leading-relaxed">
-                {error}
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-semibold leading-relaxed animate-shake">
+                <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
             )}
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition-all flex items-center justify-center gap-2"
+              disabled={submitting}
+              className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white shadow-xs transition-all flex items-center justify-center gap-2"
             >
-              {loading ? 'Verifying Credentials...' : 'Sign In to Retail NetBanking'}
+              {submitting ? (
+                <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Verifying Credentials...</>
+              ) : 'Sign In to Retail NetBanking'}
             </button>
           </form>
         )}
@@ -262,17 +280,20 @@ export const LoginPage: React.FC = () => {
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold leading-relaxed">
-                {error}
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-semibold leading-relaxed animate-shake">
+                <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
             )}
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-purple-700 hover:bg-purple-800 text-white shadow-xs transition-all flex items-center justify-center gap-2"
+              disabled={submitting}
+              className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-purple-700 hover:bg-purple-800 disabled:opacity-60 disabled:cursor-not-allowed text-white shadow-xs transition-all flex items-center justify-center gap-2"
             >
-              {loading ? 'Authenticating Officer...' : 'Authorize & Enter Risk Portal'}
+              {submitting ? (
+                <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Authenticating Officer...</>
+              ) : 'Authorize & Enter Risk Portal'}
             </button>
           </form>
         )}

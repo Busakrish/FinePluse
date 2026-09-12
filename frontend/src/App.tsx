@@ -27,9 +27,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
       <Header />
-      <div className="flex-1 flex flex-col md:flex-row">
+      <div className="flex flex-1 min-h-0">
         <Sidebar />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex flex-col min-h-0 overflow-hidden">
           {children}
         </main>
       </div>
@@ -38,12 +38,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 // Redirect to appropriate landing if already logged in
+// IMPORTANT: Never return null here — that unmounts LoginPage and destroys error state mid-request
 const LoginRoute: React.FC = () => {
   const { user, token, loading } = useAuth();
-  if (loading) {
-    return null;
-  }
-  if (token && user) {
+  // Only redirect if we have BOTH a token AND a user (fully authenticated)
+  // Do NOT block on loading — let LoginPage render immediately
+  if (!loading && token && user) {
     return <Navigate to={user.role === 'ADMIN' ? '/admin' : '/'} replace />;
   }
   return <LoginPage />;
