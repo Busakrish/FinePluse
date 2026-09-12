@@ -23,6 +23,11 @@ import {
   Compass,
   Sun,
   Award,
+  Clock,
+  PieChart,
+  HelpCircle,
+  ShieldAlert,
+  Trash2,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -83,7 +88,9 @@ export const ConversationalAssistantPage: React.FC = () => {
       return {
         id: 'init_welcome',
         sender: 'ASSISTANT',
-        content: `નમસ્તે ${firstName}ભાઈ 🌞\n\nતમારો નાણાકીય હેલ્થ સ્કોર: **${score}/100** (${tier})\n${brief?.today_suggestion || 'હું તમારા ખાતા બેલેન્સ, આગામી EMI, ખર્ચ વિશ્લેષણ અને બચત યોજનાઓ માટે તૈયાર છું.'}`,
+        content: `નમસ્તે ${firstName}ભાઈ 🌞\n\nતમારો નાણાકીય હેલ્થ સ્કોર: **${score}/100** (${tier})\n${
+          brief?.today_suggestion || 'હું તમારા ખાતા બેલેન્સ, આગામી EMI, ખર્ચ વિશ્લેષણ અને બચત યોજનાઓ માટે તૈયાર છું.'
+        }`,
         suggested_actions: brief?.quick_actions || [
           'મારું ખાતા બેલેન્સ કેટલું છે?',
           'મારી આગામી EMI તારીખ કઈ છે?',
@@ -98,7 +105,9 @@ export const ConversationalAssistantPage: React.FC = () => {
       return {
         id: 'init_welcome',
         sender: 'ASSISTANT',
-        content: `नमस्ते ${firstName} जी 🌞\n\nआपका वित्तीय स्वास्थ्य स्कोर: **${score}/100** (${tier})\n${brief?.today_suggestion || 'मैं आपके बैंक बैलेंस, आगामी किश्तों, मासिक खर्च और बचत कोचिंग के लिए तैयार हूँ।'}\n\nआज आप क्या जानना चाहते हैं?`,
+        content: `नमस्ते ${firstName} जी 🌞\n\nआपका वित्तीय स्वास्थ्य स्कोर: **${score}/100** (${tier})\n${
+          brief?.today_suggestion || 'मैं आपके बैंक बैलेंस, आगामी किश्तों, मासिक खर्च और बचत कोचिंग के लिए तैयार हूँ।'
+        }\n\nआज आप क्या जानना चाहते हैं?`,
         suggested_actions: brief?.quick_actions || [
           'मेरा वर्तमान बैलेंस कितना है?',
           'मेरी आगामी किश्त कब देय है?',
@@ -112,7 +121,9 @@ export const ConversationalAssistantPage: React.FC = () => {
     return {
       id: 'init_welcome',
       sender: 'ASSISTANT',
-      content: `Namaste ${firstName} 🌞\n\nFinancial Health Score: **${score}/100** (${tier})\n${brief?.today_suggestion || 'Great job managing your accounts! How can I assist with your finances today?'}\n\nAsk me anything about your balance, upcoming bills, spending breakdown, or smart savings opportunities.`,
+      content: `Namaste ${firstName} 🌞\n\nFinancial Health Score: **${score}/100** (${tier})\n${
+        brief?.today_suggestion || 'Great job managing your accounts! How can I assist with your finances today?'
+      }\n\nAsk me anything about your balance, upcoming bills, spending breakdown, or smart savings opportunities.`,
       suggested_actions: brief?.quick_actions || [
         'What is my available balance?',
         'When is my next EMI due?',
@@ -186,14 +197,20 @@ export const ConversationalAssistantPage: React.FC = () => {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     if (!textToSend) setInputText('');
     setLoading(true);
 
     try {
+      // Send message along with recent conversation history for multi-turn context (Feature 8)
       const res = await api.post('/chat', {
         message: text,
         language: language,
+        history: newMessages.slice(-8).map((m) => ({
+          sender: m.sender,
+          content: m.content,
+        })),
       });
 
       if (res.data?.success && res.data?.response) {
@@ -250,7 +267,12 @@ export const ConversationalAssistantPage: React.FC = () => {
     }
   }, [location.state]);
 
-  const handleClearChat = () => {
+  const handleClearChat = async () => {
+    try {
+      await api.delete('/chat/history');
+    } catch (err) {
+      console.warn('Failed to clear chat history on server:', err);
+    }
     setMessages([getPersonalizedWelcome(dailyBrief)]);
   };
 
@@ -259,12 +281,12 @@ export const ConversationalAssistantPage: React.FC = () => {
     { label: '💰 How Am I Spending?', query: 'How am I spending this month? Please give me an AI spending coaching report.' },
     { label: '⚠️ Am I Overspending?', query: 'Am I overspending on food or shopping this month?' },
     { label: '📉 How to Save More?', query: 'How can I save more money? Give me practical budgeting advice.' },
-    { label: '📊 Compare MoM Spending', query: 'Compare this month with last month. Where did I spend the most money?' },
+    { label: '📅 Upcoming Payments', query: 'What are my upcoming payments, bills, and expected salary this month?' },
+    { label: '🚀 Opportunity Detector', query: 'What investment or savings opportunities are recommended for my profile?' },
+    { label: '🔄 Can I Reduce This EMI?', query: 'Can I reduce my loan EMI or restructure it?' },
     { label: '🎯 Upcoming Life Events', query: 'What life events have you detected for me and what should I prepare for next?' },
     { label: '🏡 Home Loan Readiness', query: 'Am I eligible for a home loan soon based on my rent and savings?' },
     { label: '🛡️ Why Insurance?', query: 'Why are you recommending insurance or emergency medical protection for me?' },
-    { label: '📅 Upcoming Payments Timeline', query: 'What are my upcoming payments, bills, and expected salary this month?' },
-    { label: '🚀 Opportunity Detector', query: 'What investment or savings opportunities are recommended for my profile?' },
     { label: '🇮🇳 "Mera EMI kitna hai?"', query: 'Mera EMI kitna hai aur kab due hai?' },
     { label: '🇮🇳 "Maru balance ketlu che?"', query: 'Maru account balance ketlu che?' },
   ];
@@ -292,13 +314,41 @@ export const ConversationalAssistantPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Vernacular Language Selector */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold text-slate-600">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 rounded-lg transition ${
+                language === 'en' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'hover:text-slate-900'
+              }`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage('hi')}
+              className={`px-2 py-1 rounded-lg transition ${
+                language === 'hi' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'hover:text-slate-900'
+              }`}
+            >
+              हिन्दी
+            </button>
+            <button
+              onClick={() => setLanguage('gu')}
+              className={`px-2 py-1 rounded-lg transition ${
+                language === 'gu' ? 'bg-white text-blue-700 shadow-2xs font-bold' : 'hover:text-slate-900'
+              }`}
+            >
+              ગુજરાતી
+            </button>
+          </div>
+
           {dailyBrief && (
             <button
               onClick={() => setBriefCollapsed(!briefCollapsed)}
               className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition"
             >
               <Sun className="w-3.5 h-3.5 text-amber-500" />
-              <span>Daily Brief</span>
+              <span className="hidden sm:inline">Daily Brief</span>
               {briefCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
             </button>
           )}
@@ -306,9 +356,9 @@ export const ConversationalAssistantPage: React.FC = () => {
           <button
             onClick={handleClearChat}
             title="Reset conversation"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold text-slate-600 hover:text-red-700 hover:bg-red-50 border border-slate-200 transition"
           >
-            <RefreshCw className="w-3 h-3" />
+            <Trash2 className="w-3 h-3" />
             <span className="hidden sm:inline">Reset</span>
           </button>
         </div>
@@ -343,7 +393,7 @@ export const ConversationalAssistantPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700 font-medium">
             {dailyBrief.highlights.map((bullet, idx) => (
-              <div key={idx} className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-blue-100/60">
+              <div key={idx} className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-blue-100/60 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0" />
                 <span className="leading-snug">{bullet}</span>
               </div>
@@ -351,7 +401,7 @@ export const ConversationalAssistantPage: React.FC = () => {
           </div>
 
           {dailyBrief.today_suggestion && (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 text-xs bg-white/90 p-2.5 rounded-xl border border-blue-100">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 text-xs bg-white/90 p-2.5 rounded-xl border border-blue-100 shadow-2xs">
               <div className="flex items-center gap-2 text-blue-900 font-medium">
                 <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 <span>{dailyBrief.today_suggestion}</span>
@@ -419,30 +469,244 @@ export const ConversationalAssistantPage: React.FC = () => {
 
                   {/* Feature 2: Smart Proactive Insight Badge */}
                   {!isUser && m.proactive_insight && (
-                    <div className="mt-3 p-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-indigo-50 border border-amber-200/80 text-xs text-slate-800 space-y-1">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-[11px]">
-                        <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <div className="mt-3 p-3 rounded-xl bg-gradient-to-r from-amber-500/10 via-indigo-500/10 to-blue-500/10 border border-amber-300/90 shadow-2xs space-y-1 text-slate-800">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-xs">
+                        <Lightbulb className="w-4 h-4 text-amber-600 shrink-0" />
                         <span>Smart Proactive Insight</span>
                       </div>
-                      <p className="text-[11px] text-slate-700 leading-normal pl-5">{m.proactive_insight}</p>
+                      <p className="text-xs text-slate-700 leading-relaxed pl-5 font-medium">{m.proactive_insight}</p>
                     </div>
                   )}
 
                   {/* Feature 3: AI Financial Coach Advice Card */}
                   {!isUser && m.coaching_advice && (
-                    <div className="mt-3 p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 text-xs space-y-1 text-slate-800">
-                      <div className="flex items-center gap-1.5 font-bold text-blue-900 text-[11px]">
-                        <TrendingUp className="w-3.5 h-3.5 text-blue-700 shrink-0" />
-                        <span>AI Financial Coach Analysis</span>
+                    <div className="mt-3 p-3 rounded-xl bg-blue-50/80 border border-blue-200 shadow-2xs space-y-2 text-slate-800">
+                      <div className="flex items-center gap-2 font-bold text-blue-900 text-xs">
+                        <TrendingUp className="w-4 h-4 text-blue-700 shrink-0" />
+                        <span>AI Financial Coach Rationale</span>
                       </div>
-                      <div className="pl-5 space-y-1 text-[11px]">
-                        <p>
-                          <strong className="text-slate-900">Why this advice:</strong> {m.coaching_advice.why_this_advice}
-                        </p>
-                        <p>
-                          <strong className="text-emerald-700">Expected benefit:</strong> {m.coaching_advice.expected_benefit}
-                        </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="p-2.5 rounded-xl bg-white border border-blue-100 space-y-1">
+                          <span className="font-bold text-slate-800 text-[11px] block">💡 Why this advice:</span>
+                          <p className="text-slate-600 leading-snug text-[11px]">{m.coaching_advice.why_this_advice}</p>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200 space-y-1">
+                          <span className="font-bold text-emerald-900 text-[11px] block">📈 Expected Benefit:</span>
+                          <p className="text-emerald-800 leading-snug text-[11px] font-semibold">
+                            {m.coaching_advice.expected_benefit}
+                          </p>
+                        </div>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Feature 4: Weekly Spending Summary Breakdown Card */}
+                  {!isUser &&
+                    (m.intent === 'SPENDING_COACH' || m.verified_data?.spending_coach) &&
+                    m.verified_data?.spending_coach && (
+                      <div className="mt-3 p-3.5 rounded-2xl bg-gradient-to-br from-indigo-50/90 to-purple-50/70 border border-indigo-200 shadow-2xs space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 font-bold text-indigo-900 text-xs">
+                            <PieChart className="w-4 h-4 text-indigo-700 shrink-0" />
+                            <span>Verified Spending Coach Report</span>
+                          </div>
+                          <button
+                            onClick={() => navigate('/spending-coach')}
+                            className="text-[11px] font-bold text-indigo-700 hover:text-indigo-900 flex items-center gap-1 hover:underline"
+                          >
+                            <span>Full Spending Coach</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                          <div className="p-2 rounded-xl bg-white border border-indigo-100">
+                            <span className="text-[10px] text-slate-500 block">Total Spent</span>
+                            <span className="font-bold text-slate-900">
+                              ₹{(m.verified_data.spending_coach.total_monthly_spent || 0).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          <div className="p-2 rounded-xl bg-white border border-indigo-100">
+                            <span className="text-[10px] text-slate-500 block">Highest Category</span>
+                            <span className="font-bold text-red-700 truncate block">
+                              {m.verified_data.spending_coach.highest_category}
+                            </span>
+                            <span className="text-[10px] text-slate-500">
+                              ₹{(m.verified_data.spending_coach.highest_category_amount || 0).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          <div className="p-2 rounded-xl bg-white border border-indigo-100">
+                            <span className="text-[10px] text-slate-500 block">Lowest Category</span>
+                            <span className="font-bold text-emerald-700 truncate block">
+                              {m.verified_data.spending_coach.lowest_category}
+                            </span>
+                            <span className="text-[10px] text-slate-500">
+                              ₹{(m.verified_data.spending_coach.lowest_category_amount || 0).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          <div className="p-2 rounded-xl bg-white border border-indigo-100">
+                            <span className="text-[10px] text-slate-500 block">MoM Trend</span>
+                            <span
+                              className={`font-bold ${
+                                m.verified_data.spending_coach.mom_change_pct > 0 ? 'text-amber-700' : 'text-emerald-700'
+                              }`}
+                            >
+                              {m.verified_data.spending_coach.mom_change_pct > 0 ? '+' : ''}
+                              {m.verified_data.spending_coach.mom_change_pct}%
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Feature 5: Upcoming Financial Events Timeline Card */}
+                  {!isUser &&
+                    (m.intent === 'UPCOMING_EVENTS' || m.verified_data?.timeline) &&
+                    Array.isArray(m.verified_data?.timeline) &&
+                    m.verified_data.timeline.length > 0 && (
+                      <div className="mt-3 p-3.5 rounded-2xl bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/60 border border-blue-200 shadow-2xs space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 font-bold text-blue-900 text-xs">
+                            <Calendar className="w-4 h-4 text-blue-700 shrink-0" />
+                            <span>Verified Financial Timeline (This Month)</span>
+                          </div>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                            {m.verified_data.timeline.length} Events
+                          </span>
+                        </div>
+
+                        <div className="space-y-2">
+                          {m.verified_data.timeline.map((ev: any, idx: number) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200/90 hover:border-blue-300 transition text-xs shadow-2xs"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <div
+                                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${
+                                    ev.type === 'SALARY'
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : 'bg-blue-100 text-blue-800'
+                                  }`}
+                                >
+                                  {ev.type === 'SALARY' ? (
+                                    <Banknote className="w-4 h-4" />
+                                  ) : (
+                                    <Clock className="w-4 h-4" />
+                                  )}
+                                </div>
+                                <div>
+                                  <div className="font-bold text-slate-900 leading-tight">{ev.title}</div>
+                                  <div className="text-[11px] text-slate-500">
+                                    {ev.date} • {ev.days_remaining > 0 ? `in ${ev.days_remaining} days` : 'today'}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div
+                                  className={`font-bold ${
+                                    ev.type === 'SALARY' ? 'text-emerald-700' : 'text-slate-900'
+                                  }`}
+                                >
+                                  {ev.type === 'SALARY' ? '+' : '-'}₹{(ev.amount || 0).toLocaleString('en-IN')}
+                                </div>
+                                <span
+                                  className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${
+                                    ev.status === 'COMPLETED'
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : 'bg-amber-100 text-amber-800'
+                                  }`}
+                                >
+                                  {ev.status}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Feature 6 & 10: Opportunity Detector Cards (with Safety Shield & Don't Sell Me Mode) */}
+                  {!isUser && (m.intent === 'OPPORTUNITY_DETECTOR' || m.verified_data?.opportunities) && (
+                    <div className="mt-3 space-y-2.5">
+                      {m.verified_data?.dont_sell_me_active ? (
+                        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs space-y-2">
+                          <div className="flex items-center gap-2 font-bold text-amber-900">
+                            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+                            <span>FinPulse Ethical Safety Shield Active (Don't Sell Me Mode)</span>
+                          </div>
+                          <p className="text-slate-700 text-[11px] leading-relaxed">
+                            {m.verified_data.message ||
+                              'Because your Financial Stress Index indicates elevated EMI obligations, our anti-predatory engine has blocked unsolicited loan offers. Instead, here are debt restructuring and budget relief options:'}
+                          </p>
+                          <div className="flex flex-wrap gap-2 pt-1">
+                            <button
+                              onClick={() => navigate('/what-if')}
+                              className="px-3 py-1.5 rounded-xl bg-blue-700 text-white font-bold text-xs hover:bg-blue-800 shadow-2xs flex items-center gap-1"
+                            >
+                              <span>FinPulse Samadhan Relief Plan</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : Array.isArray(m.verified_data?.opportunities) && m.verified_data.opportunities.length > 0 ? (
+                        <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-50/80 via-white to-blue-50/60 border border-emerald-200 shadow-2xs space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 font-bold text-emerald-900 text-xs">
+                              <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+                              <span>AI Opportunity Detector</span>
+                            </div>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                              {m.verified_data.opportunities.length} Matched
+                            </span>
+                          </div>
+
+                          <div className="space-y-2">
+                            {m.verified_data.opportunities.map((opp: any, oIdx: number) => (
+                              <div
+                                key={oIdx}
+                                className="p-3 rounded-xl bg-white border border-emerald-100 hover:border-emerald-300 transition text-xs space-y-2 shadow-2xs"
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <div className="font-bold text-slate-900 text-xs">{opp.product_name}</div>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                                      {opp.product_type}
+                                    </span>
+                                  </div>
+                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">
+                                    {opp.match_score}% Match
+                                  </span>
+                                </div>
+
+                                {/* Explicit "Why you're seeing this recommendation" */}
+                                <div className="p-2 rounded-lg bg-emerald-50/70 border border-emerald-200/80 text-[11px] text-slate-800 space-y-0.5">
+                                  <div className="flex items-center gap-1 font-bold text-emerald-900 text-[10px]">
+                                    <HelpCircle className="w-3 h-3 text-emerald-700" />
+                                    <span>Why you're seeing this recommendation:</span>
+                                  </div>
+                                  <p className="text-slate-700 pl-4">{opp.why_recommendation}</p>
+                                  {opp.expected_benefit && (
+                                    <p className="text-emerald-800 font-semibold pl-4">
+                                      ✨ Benefit: {opp.expected_benefit}
+                                    </p>
+                                  )}
+                                </div>
+
+                                <div className="flex justify-end pt-1">
+                                  <button
+                                    onClick={() => navigate('/recommendations')}
+                                    className="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white shadow-2xs flex items-center gap-1 transition"
+                                  >
+                                    <span>Explore Plan</span>
+                                    <ArrowRight className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                   )}
 
@@ -512,7 +776,7 @@ export const ConversationalAssistantPage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Feature 7: Dynamic Follow-Up Suggestions */}
+                {/* Feature 7: Dynamic Context-Aware Follow-Up Suggestions */}
                 {!isUser && m.suggested_actions && m.suggested_actions.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {m.suggested_actions.map((action, aIdx) => (

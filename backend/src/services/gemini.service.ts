@@ -40,10 +40,10 @@ export interface DailyBankingBrief {
 
 export class GeminiService {
   private static readonly MODELS = [
-    'gemini-2.5-flash',
     'gemini-3.6-flash',
-    'gemini-3.5-flash',
     'gemini-flash-latest',
+    'gemini-3.5-flash',
+    'gemini-3.7-flash',
   ];
 
   /**
@@ -237,28 +237,57 @@ export class GeminiService {
     const isStressed = snap.financial_twin.dont_sell_me_active || snap.stress_metrics.stress_level === 'HIGH';
     const lang = languageHint || snap.customer.preferred_language || 'en';
 
+    // Time-based greeting
+    const hour = new Date().getHours();
+    let timeGreetingEn = 'Good Day';
+    let timeGreetingHi = 'नमस्ते';
+    let timeGreetingGu = 'નમસ્તે';
+    if (hour < 12) {
+      timeGreetingEn = 'Good Morning';
+      timeGreetingHi = 'शुभ प्रभात';
+      timeGreetingGu = 'સુપ્રભાત';
+    } else if (hour < 17) {
+      timeGreetingEn = 'Good Afternoon';
+      timeGreetingHi = 'शुभ दोपहर';
+      timeGreetingGu = 'શુભ બપોર';
+    } else {
+      timeGreetingEn = 'Good Evening';
+      timeGreetingHi = 'शुभ संध्या';
+      timeGreetingGu = 'શુભ સંધ્યા';
+    }
+
+    const greeting =
+      lang === 'gu'
+        ? `${timeGreetingGu} ${firstName}ભાઈ 👋`
+        : lang === 'hi'
+        ? `${timeGreetingHi} ${firstName} जी 👋`
+        : `${timeGreetingEn} ${firstName} 👋`;
+
     // Build verified bullet highlights
     const highlights: string[] = [];
 
-    // Bullet 1: Balance status
+    // Bullet 1: Balance / Salary Credit status
+    const isSalaryAcc = snap.account.account_type === 'SALARY';
     highlights.push(
       lang === 'gu'
-        ? `તમારા ${snap.account.account_type === 'SALARY' ? 'પગાર' : 'બચત'} ખાતામાં ઉપલબ્ધ બેલેન્સ ₹${snap.account.balance.toLocaleString('en-IN')} છે.`
+        ? `તમારા ${isSalaryAcc ? 'પગાર' : 'બચત'} ખાતામાં ઉપલબ્ધ બેલેન્સ ₹${snap.account.balance.toLocaleString('en-IN')} છે.`
         : lang === 'hi'
-        ? `आपके ${snap.account.account_type === 'SALARY' ? 'वेतन' : 'बचत'} खाते में वर्तमान शेष राशि ₹${snap.account.balance.toLocaleString('en-IN')} है।`
+        ? `आपके ${isSalaryAcc ? 'वेतन' : 'बचत'} खाते में वर्तमान उपलब्ध शेष राशि ₹${snap.account.balance.toLocaleString('en-IN')} है।`
         : `Available balance in your ${snap.account.account_type} Account: ₹${snap.account.balance.toLocaleString('en-IN')}.`
     );
 
-    // Bullet 2: Upcoming EMI or clean debt status
+    // Bullet 2: Upcoming EMI countdown or clean debt status
     if (snap.loans.count > 0) {
       const nearestLoan = snap.upcoming_events_timeline.find((e) => e.type === 'EMI');
       if (nearestLoan) {
+        const days = nearestLoan.days_until_due;
+        const dueText = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `in ${days} days`;
         highlights.push(
           lang === 'gu'
-            ? `આગામી EMI: ${nearestLoan.event_name} ₹${nearestLoan.amount.toLocaleString('en-IN')} (તારીખ ${nearestLoan.due_day}).`
+            ? `આગામી EMI: ${nearestLoan.event_name} ₹${nearestLoan.amount.toLocaleString('en-IN')} (${days <= 3 ? `${days} દિવસમાં બાકી` : `તારીખ ${nearestLoan.due_day}`}).`
             : lang === 'hi'
-            ? `आगामी किश्त: ${nearestLoan.event_name} ₹${nearestLoan.amount.toLocaleString('en-IN')} (${nearestLoan.due_day} तारीख को देय).`
-            : `Upcoming EMI: ${nearestLoan.event_name} of ₹${nearestLoan.amount.toLocaleString('en-IN')} due on day ${nearestLoan.due_day}.`
+            ? `आगामी किश्त: ${nearestLoan.event_name} ₹${nearestLoan.amount.toLocaleString('en-IN')} (${days <= 3 ? `${days} दिन में देय` : `${nearestLoan.due_day} तारीख को देय`}).`
+            : `Upcoming EMI: ${nearestLoan.event_name} of ₹${nearestLoan.amount.toLocaleString('en-IN')} due ${dueText} (Day ${nearestLoan.due_day}).`
         );
       }
     } else {
@@ -267,32 +296,53 @@ export class GeminiService {
           ? 'હાલમાં કોઈ સક્રિય લોન બાકી નથી. તમારું દેવું શૂન્ય છે!'
           : lang === 'hi'
           ? 'वर्तमान में कोई सक्रिय ऋण बकाया नहीं है। आपका ऋण स्तर शून्य है!'
-          : 'Zero active debt obligations. All repayments current.'
+          : 'Zero active debt obligations. Your cashflow is debt-free!'
       );
     }
 
-    // Bullet 3: Savings growth trend
+    // Bullet 3: Savings comparison vs baseline
     const savingsDelta = snap.financial_twin.savings_growth_rate;
+    const monthlySavings = snap.spending_coach?.overview?.total_savings_this_month || snap.financial_twin.monthly_surplus;
     if (savingsDelta > 0) {
       highlights.push(
         lang === 'gu'
-          ? `આ મહિને તમારી બચતમાં +${savingsDelta}% નો વધારો થયો છે.`
+          ? `તમે ગયા અઠવાડિયા કરતાં વધુ બચત કરી (+${savingsDelta}% બચત વૃદ્ધિ, માસિક બચત ₹${monthlySavings.toLocaleString('en-IN')}).`
           : lang === 'hi'
-          ? `इस महीने आपकी बचत दर में +${savingsDelta}% की शानदार वृद्धि हुई है।`
-          : `Monthly savings grew by +${savingsDelta}% compared to baseline.`
+          ? `आपने पिछले सप्ताह से अधिक बचत की (+${savingsDelta}% बचत वृद्धि, मासिक बचत ₹${monthlySavings.toLocaleString('en-IN')}).`
+          : `You saved more this cycle: Monthly savings grew +${savingsDelta}% (₹${monthlySavings.toLocaleString('en-IN')} accumulated).`
       );
-    } else if (savingsDelta < 0) {
+    } else {
       highlights.push(
         lang === 'gu'
-          ? `ધ્યાન આપો: બચતમાં ${savingsDelta}% નો ઘટાડો થયો છે.`
+          ? `તમારો માસિક બચત દર: ${snap.financial_twin.savings_ratio_percent}% (સરપ્લસ ₹${monthlySavings.toLocaleString('en-IN')}).`
           : lang === 'hi'
-          ? `सावधानी: बचत में ${savingsDelta}% की गिरावट दर्ज की गई है।`
-          : `Alert: Monthly savings declined by ${savingsDelta}% recently.`
+          ? `आपकी मासिक बचत दर: ${snap.financial_twin.savings_ratio_percent}% (अधिशेष ₹${monthlySavings.toLocaleString('en-IN')}).`
+          : `Savings Ratio: ${snap.financial_twin.savings_ratio_percent}% with ₹${monthlySavings.toLocaleString('en-IN')} monthly surplus.`
       );
     }
 
-    // Bullet 4: Spending insight
-    if (snap.spending_summary.highest_category.amount > 0) {
+    // Bullet 4: Spending Category Insights (Spending Coach data)
+    if (snap.spending_coach?.categories && snap.spending_coach.categories.length > 0) {
+      const topCat = snap.spending_coach.categories[0];
+      const secondCat = snap.spending_coach.categories.find((c: any) => c.change_percentage < 0);
+      if (secondCat) {
+        highlights.push(
+          lang === 'gu'
+            ? `${secondCat.category} ખર્ચમાં ${Math.abs(secondCat.change_percentage)}% નો ઘટાડો થયો છે.`
+            : lang === 'hi'
+            ? `${secondCat.category} खर्च में ${Math.abs(secondCat.change_percentage)}% की कमी दर्ज हुई है।`
+            : `${secondCat.category} spending decreased ${Math.abs(secondCat.change_percentage)}% compared to last month.`
+        );
+      } else {
+        highlights.push(
+          lang === 'gu'
+            ? `સૌથી મોટો ખર્ચ: ${topCat.category} (₹${topCat.amount.toLocaleString('en-IN')}).`
+            : lang === 'hi'
+            ? `सर्वाधिक खर्च: ${topCat.category} (₹${topCat.amount.toLocaleString('en-IN')}).`
+            : `Top spending category: ${topCat.category} (₹${topCat.amount.toLocaleString('en-IN')}).`
+        );
+      }
+    } else if (snap.spending_summary.highest_category.amount > 0) {
       highlights.push(
         lang === 'gu'
           ? `સૌથી મોટો ખર્ચ: ${snap.spending_summary.highest_category.category} (₹${snap.spending_summary.highest_category.amount.toLocaleString('en-IN')}).`
@@ -302,13 +352,13 @@ export class GeminiService {
       );
     }
 
-    // Bullet 5: Financial Health score
+    // Bullet 5: Financial Health Score
     highlights.push(
       lang === 'gu'
-        ? `નાણાકીય સ્વાસ્થ્ય સ્કોર: ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
+        ? `તમારું નાણાકીય સ્વાસ્થ્ય સ્કોર: ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
         : lang === 'hi'
-        ? `वित्तीय स्वास्थ्य स्कोर: ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
-        : `Financial Health Score: ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
+        ? `आपका वित्तीय स्वास्थ्य स्कोर: ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
+        : `Your Financial Health Score is ${snap.financial_twin.health_score}/100 (${snap.financial_twin.health_tier}).`
     );
 
     // Today's personalized suggestion
@@ -317,43 +367,44 @@ export class GeminiService {
     if (isStressed) {
       suggestion =
         lang === 'gu'
-          ? 'સલાહ: તમારા પર EMI નું ભારણ વધુ છે. સમાધાન રાહત યોજના હેઠળ તમારો હપ્તો ₹13,200 સુધી ઓછો કરો.'
+          ? 'સલાહ: તમારા પર EMI નું ભારણ વધુ છે. સમાધાન રાહત યોજના હેઠળ તમારો હપ્તો ઘટાડવા માટે અરજી કરો.'
           : lang === 'hi'
-          ? 'परामर्श: आपका ऋण भार अधिक है। समाधान योजना द्वारा अपनी किश्त ₹13,200 तक घटाएं।'
-          : 'Advisory: High EMI commitment detected. Explore Samadhan Restructuring to reduce your EMI burden.';
+          ? 'परामर्श: आपका ऋण भार अधिक है। समाधान योजना द्वारा अपनी किश्त कम कराने हेतु आवेदन करें।'
+          : 'Advisory: High EMI burden detected. Explore Samadhan Restructuring to reduce your EMI obligations.';
       deepLink = '/stress-assistance';
+    } else if (snap.loans.count > 0) {
+      const nearestLoan = snap.upcoming_events_timeline.find((e) => e.type === 'EMI');
+      suggestion =
+        lang === 'gu'
+          ? `સલાહ: તમારી ${nearestLoan?.event_name || 'લોન'} ની EMI સમયસર ભરો જેથી તમારો ક્રેડિટ સ્કોર મજબૂત રહે.`
+          : lang === 'hi'
+          ? `परामर्श: अपनी ${nearestLoan?.event_name || 'ऋण'} की किश्त समय से पहले चुकाएं ताकि आपका सिबिल स्कोर सुरक्षित रहे।`
+          : `Today's suggestion: Pay your ${nearestLoan?.event_name || 'active loan'} EMI before the due date to maintain a healthy debt score.`;
+      deepLink = '/what-if';
     } else if (snap.financial_twin.monthly_surplus > 10000) {
       suggestion =
         lang === 'gu'
-          ? `સલાહ: તમારા ખાતામાં ₹${snap.financial_twin.monthly_surplus.toLocaleString('en-IN')} ની સરપ્લસ બચત છે. ગોલ્ડ SIP અથવા ફિક્સ્ડ ડિપોઝિટ શરૂ કરો.`
+          ? `સલાહ: તમારા ખાતામાં ₹${snap.financial_twin.monthly_surplus.toLocaleString('en-IN')} ની સરપ્લસ બચત છે. ઇમરજન્સી FD અથવા ગોલ્ડ SIP શરૂ કરો.`
           : lang === 'hi'
-          ? `परामर्श: आपके पास ₹${snap.financial_twin.monthly_surplus.toLocaleString('en-IN')} का मासिक अधिशेष है। गोल्ड SIP या FD शुरू करें।`
+          ? `परामर्श: आपके पास ₹${snap.financial_twin.monthly_surplus.toLocaleString('en-IN')} का अधिशेष है। इमरजेंसी FD या गोल्ड SIP शुरू करें।`
           : `Tip: You have ₹${snap.financial_twin.monthly_surplus.toLocaleString('en-IN')} idle monthly surplus. An Emergency FD or Gold SIP would grow your wealth safely.`;
       deepLink = '/recommendations';
     } else {
       suggestion =
         lang === 'gu'
-          ? 'સલાહ: નિયમિત ખર્ચ પર નિયંત્રણ રાખીને 3 મહિનાનું ઇમરજન્સી ફંડ તૈયાર કરો.'
+          ? 'સલાહ: બિનજરૂરી ખર્ચ પર નિયંત્રણ રાખીને 3 મહિનાનું ઇમરજન્સી ફંડ તૈયાર કરો.'
           : lang === 'hi'
-          ? 'परामर्श: अनावश्यक खर्चों को नियंत्रित कर 3 माह का आपातकालीन फंड बनाएं।'
+          ? 'परामर्श: गैर-जरूरी खर्चों को नियंत्रित कर 3 माह का आपातकालीन फंड बनाएं।'
           : 'Tip: Maintain essential vs discretionary discipline to build a 3-month emergency cushion.';
-      deepLink = '/twin';
+      deepLink = '/spending-coach';
     }
-
-    // Localized greeting
-    const greeting =
-      lang === 'gu'
-        ? `નમસ્તે ${firstName}ભાઈ 👋`
-        : lang === 'hi'
-        ? `नमस्ते ${firstName} जी 👋`
-        : `Good Day ${firstName} 👋`;
 
     const quickActions =
       lang === 'gu'
-        ? ['મારું ખાતા બેલેન્સ', 'આગામી EMI તારીખ', 'ખર્ચ રિપોર્ટ']
+        ? ['મારું ખાતા બેલેન્સ', 'આગામી ચૂકવણી અને બિલ', 'ખર્ચ રિપોર્ટ અને બચત સલાહ']
         : lang === 'hi'
-        ? ['मेरा बैलेंस बताओ', 'आगामी किश्त कब है?', 'साप्ताहिक खर्च विवरण']
-        : ['Check Available Balance', 'Upcoming Financial Events', 'Weekly Spending Summary'];
+        ? ['मेरा बैलेंस बताओ', 'आगामी किश्त व देय तिथियां', 'मासिक खर्च व बचत सुझाव']
+        : ['Check Available Balance', 'Upcoming Payments & EMIs', 'Weekly Spending Summary'];
 
     return {
       greeting,
@@ -458,15 +509,33 @@ ADVANCED BANKING COPILOT CAPABILITIES:
         * Budget Health meter: Level (${verifiedSnapshot.spending_coach?.budget_health?.level || 'HEALTHY'}), score (${verifiedSnapshot.spending_coach?.budget_health?.score || 75}/100), and reason.
       - NEVER recommend loans or debt to someone in stress. Focus purely on savings, budgeting discipline, and expense moderation.
 
-13. Out of Scope / Fallback:
-    - If the request is totally unrelated to banking (e.g. general trivia, poetry): Politely say: "I'm FinPulse AI, your dedicated banking assistant for Bharat. I can assist you with your accounts, loans, UPI payments, fraud protection, investments, and financial health." Do not answer general trivia.
+13. Greetings & Conversational Politeness (CRITICAL):
+    - When the user sends a greeting (e.g., "Hello", "Hi", "Hey", "Namaste", "Kem Cho", "Good Morning", "Good Afternoon", "Kemcho"):
+      * Respond warmly and empathetically in their language using their first name (${verifiedSnapshot.customer.name.split(' ')[0]}).
+      * Provide a brief positive status check (e.g., mention their health score of ${verifiedSnapshot.financial_twin.health_score}/100 or confirm their accounts are active).
+      * Ask how you can help with their banking, savings, or investments today.
+      * Set "intent": "GREETING".
+      * Provide 3 relevant conversation starter suggestions in suggested_actions.
+      * DO NOT treat greetings as OUT_OF_SCOPE or GENERAL_HELP!
 
-14. Response Format:
+14. Identity & Capability Inquiries:
+    - When the user asks about who you are or what you can do (e.g., "Who are you?", "What can you do?", "Help me", "Tell me about yourself"):
+      * Introduce yourself warmly as FinPulse AI — their hyper-personalized AI banking copilot for Bharat.
+      * Explain your capabilities: checking verified balance & transactions, tracking loan EMIs & what-if restructuring, personalized spending coaching, life event forecasting, and 24x7 fraud protection.
+      * Set "intent": "IDENTITY_HELP".
+      * DO NOT return robotic or generic help!
+
+15. Out of Scope / Unrelated Topics ONLY:
+    - ONLY if the user's question is completely unrelated to banking, personal finances, investments, economy, or account security (e.g., "Who won the cricket match?", "Tell me a joke", "Explain quantum physics"):
+      * Politely say: "I am your FinPulse AI Banking Copilot for Bharat. I can assist you with your accounts, loans, UPI payments, fraud protection, investments, and financial health."
+      * Set "intent": "OUT_OF_SCOPE".
+
+16. Response Format:
     Output ONLY a valid JSON object with NO surrounding markdown backticks (no \`\`\`json):
     {
       "message": "Friendly, empathetic, conversational response with clear markdown formatting (bold key numbers in Indian currency format like ₹1,42,500).",
       "language": "en" | "hi" | "gu",
-      "intent": "CHECK_BALANCE" | "CHECK_LOANS_EMI" | "CHECK_TRANSACTIONS" | "FINANCIAL_HEALTH" | "FINANCIAL_ADVICE" | "INVESTMENT_GUIDANCE" | "INSURANCE_GUIDANCE" | "FRAUD_SECURITY" | "UPI_HELP" | "STRESS_ASSISTANCE" | "CONSENT_QUERY" | "WHAT_IF_LOAN" | "WEEKLY_SPENDING_SUMMARY" | "UPCOMING_EVENTS" | "FINANCIAL_COACH" | "OPPORTUNITY_DETECTOR" | "LIFE_EVENT_PREDICTION" | "SPENDING_COACH" | "GENERAL_BANKING" | "OUT_OF_SCOPE",
+      "intent": "GREETING" | "IDENTITY_HELP" | "CHECK_BALANCE" | "CHECK_LOANS_EMI" | "CHECK_TRANSACTIONS" | "FINANCIAL_HEALTH" | "FINANCIAL_ADVICE" | "INVESTMENT_GUIDANCE" | "INSURANCE_GUIDANCE" | "FRAUD_SECURITY" | "UPI_HELP" | "STRESS_ASSISTANCE" | "CONSENT_QUERY" | "WHAT_IF_LOAN" | "WEEKLY_SPENDING_SUMMARY" | "UPCOMING_EVENTS" | "FINANCIAL_COACH" | "OPPORTUNITY_DETECTOR" | "LIFE_EVENT_PREDICTION" | "SPENDING_COACH" | "GENERAL_BANKING" | "OUT_OF_SCOPE",
       "verified_data": { ...key figures actually cited in response... },
       "proactive_insight": "1-2 sentence smart proactive insight relevant to the query topic",
       "coaching_advice": {
@@ -527,7 +596,7 @@ ${userQuery}
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(bodyPayload),
-          signal: AbortSignal.timeout(6000),
+          signal: AbortSignal.timeout(12000),
         });
 
         if (!res.ok) {
