@@ -3,7 +3,7 @@
     {
       "id": "usr_rahul",
       "email": "rahul@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-01-10T10:00:00.000Z",
       "updated_at": "2026-01-10T10:00:00.000Z"
@@ -11,7 +11,7 @@
     {
       "id": "usr_priya",
       "email": "priya@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-01-12T11:00:00.000Z",
       "updated_at": "2026-01-12T11:00:00.000Z"
@@ -19,7 +19,7 @@
     {
       "id": "usr_amit",
       "email": "amit@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-01-15T09:30:00.000Z",
       "updated_at": "2026-01-15T09:30:00.000Z"
@@ -27,7 +27,7 @@
     {
       "id": "usr_vikram",
       "email": "vikram@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-01-20T14:15:00.000Z",
       "updated_at": "2026-01-20T14:15:00.000Z"
@@ -35,7 +35,7 @@
     {
       "id": "usr_ramesh",
       "email": "ramesh@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-02-01T08:45:00.000Z",
       "updated_at": "2026-02-01T08:45:00.000Z"
@@ -43,7 +43,7 @@
     {
       "id": "usr_sunita",
       "email": "sunita@finpulse.bharat",
-      "password_hash": "$2a$10$0k0KbNw8XhVDTrn4irBmHe9LM2nFvYyYUjxB1Cquaj9b0I9xADuW2",
+      "password_hash": "$2a$10$i6gtZZxwQ35SvGp7vXjgPePVBowfklCsbrgbvOIWjl6LFao17Z7yC",
       "role": "CUSTOMER",
       "created_at": "2026-02-05T12:00:00.000Z",
       "updated_at": "2026-02-05T12:00:00.000Z"
@@ -51,7 +51,7 @@
     {
       "id": "usr_admin",
       "email": "admin@finpulse.bharat",
-      "password_hash": "$2a$10$U1H.w1M2fD7UO4s25HIo2uVn7BKuzvhetGLIzkWIuwh4borvtptMu",
+      "password_hash": "$2a$10$gPP0MYpqnuWnSnlN9mp3Ae9uwleA6ECl7JiBw1Bn61FlGapJttfuu",
       "role": "ADMIN",
       "created_at": "2026-01-01T00:00:00.000Z",
       "updated_at": "2026-01-01T00:00:00.000Z"
@@ -607,7 +607,7 @@
       "financial_health_analysis": true,
       "personalized_recommendations": true,
       "marketing_personalization": true,
-      "updated_at": "2026-01-10T10:00:00.000Z"
+      "updated_at": "2026-09-12T07:45:35.505Z"
     },
     {
       "id": "con_priya",
@@ -660,22 +660,21 @@
       "id": "twin_rahul",
       "customer_id": "cust_rahul",
       "monthly_income": 85000,
-      "monthly_expenses": 34300,
-      "monthly_savings": 24200,
-      "monthly_emi_burden": 26500,
-      "savings_ratio": 28.47,
-      "expense_ratio": 40.35,
-      "emi_to_income_ratio": 31.18,
+      "monthly_expenses": 38000,
+      "monthly_savings": 35000,
+      "monthly_emi_burden": 12000,
+      "savings_ratio": 41.18,
+      "expense_ratio": 44.71,
+      "emi_to_income_ratio": 14.12,
       "savings_growth_rate": 15.5,
-      "financial_health_score": 80,
+      "financial_health_score": 92,
       "financial_health_tier": "EXCELLENT",
       "stress_level": "LOW",
-      "stress_score": 5,
-      "behavioral_segment": "ASPIRATIONAL_BORROWER",
+      "stress_score": 12,
+      "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T07:26:44.259Z",
-      "updated_at": "2026-09-12T07:26:44.259Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     },
     {
       "id": "twin_priya",
@@ -695,7 +694,7 @@
       "behavioral_segment": "ASPIRATIONAL_BORROWER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T07:13:34.995Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     },
     {
       "id": "twin_amit",
@@ -715,7 +714,7 @@
       "behavioral_segment": "VULNERABLE_BORROWER",
       "dont_sell_me_active": true,
       "guardian_status": "HELP",
-      "last_evaluated_at": "2026-09-12T07:13:34.995Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     },
     {
       "id": "twin_vikram",
@@ -735,7 +734,7 @@
       "behavioral_segment": "TRANSACTIONAL_USER",
       "dont_sell_me_active": false,
       "guardian_status": "PROTECT",
-      "last_evaluated_at": "2026-09-12T07:13:34.995Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     },
     {
       "id": "twin_ramesh",
@@ -755,7 +754,7 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T07:13:34.995Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     },
     {
       "id": "twin_sunita",
@@ -775,7 +774,7 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T07:13:34.995Z"
+      "last_evaluated_at": "2026-09-12T07:45:35.446Z"
     }
   ],
   "ai_insights": [
@@ -1008,107 +1007,43 @@
     }
   ],
   "chat_sessions": [],
-  "chat_messages": [
+  "chat_messages": [],
+  "what_if_simulations": [
     {
-      "id": "msg_u_1789197435447",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "What financial life events have you detected for me?",
-      "intent_detected": "UPCOMING_EVENTS",
-      "language": "en",
-      "created_at": "2026-09-12T07:17:15.447Z"
-    },
-    {
-      "id": "msg_a_1789197435448",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Here are the upcoming financial events and scheduled cashflows detected for your account:\n\n1. **Monthly Salary Credit**: **₹85,000** expected on the 1st of next month (in **19 days**).\n2. **Vehicle Loan EMI Payment**: **₹12,000** scheduled for auto-debit on the 5th (in **23 days**).\n\nBoth upcoming events align smoothly with your current account balance of **₹1,42,500**.",
-      "intent_detected": "UPCOMING_EVENTS",
-      "verified_data_used": {
-        "monthly_salary": 85000,
-        "salary_days_until_due": 19,
-        "vehicle_emi": 12000,
-        "emi_days_until_due": 23,
-        "account_balance": 142500
+      "id": "sim_1789199135496_ij9o",
+      "customer_id": "cust_sunita",
+      "simulation_type": "TAKE_LOAN",
+      "input_params": {
+        "loan_amount": 500000,
+        "interest_rate": 10.5,
+        "tenure_months": 36
       },
-      "language": "en",
-      "created_at": "2026-09-12T07:17:15.447Z"
-    },
-    {
-      "id": "msg_u_1789197745924",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "What life events have you detected for me?",
-      "intent_detected": "UPCOMING_EVENTS",
-      "language": "en",
-      "created_at": "2026-09-12T07:22:25.924Z"
-    },
-    {
-      "id": "msg_a_1789197745925",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Based on your verified banking timeline, here are the upcoming financial events detected for your account:\n\n1. **Monthly Salary Credit**: **₹85,000** expected in **19 days** (1st of the month).\n2. **Vehicle Loan EMI Payment**: **₹12,000** due in **23 days** (5th of the month).\n\nYour current account balance of **₹1,42,500** comfortably covers your upcoming loan EMI and recurring expenses.",
-      "intent_detected": "UPCOMING_EVENTS",
-      "verified_data_used": {
-        "account_balance": 142500,
-        "salary_amount": 85000,
-        "salary_days_until_due": 19,
-        "vehicle_emi_amount": 12000,
-        "vehicle_emi_days_until_due": 23
+      "current_metrics": {
+        "monthly_income": 55000,
+        "monthly_expenses": 31000,
+        "monthly_savings": 18000,
+        "monthly_emi": 6000,
+        "monthly_surplus": 18000,
+        "debt_burden_percent": 10.9,
+        "financial_health_score": 84,
+        "stress_level": "LOW"
       },
-      "language": "en",
-      "created_at": "2026-09-12T07:22:25.924Z"
-    },
-    {
-      "id": "msg_u_1789197765776",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "Am I eligible for a home loan soon?",
-      "intent_detected": "WHAT_IF_LOAN",
-      "language": "en",
-      "created_at": "2026-09-12T07:22:45.776Z"
-    },
-    {
-      "id": "msg_a_1789197765777",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "Yes, **Rahul**, your financial profile makes you a strong candidate for a home loan!\n\nHere is why your eligibility outlook is excellent:\n- **Low Debt Burden**: Your existing **₹12,000** Vehicle EMI accounts for only **14.12%** of your **₹85,000** monthly income.\n- **Strong Surplus**: You have a monthly surplus of **₹38,700** and an **EXCELLENT** financial health score of **92/100**.\n\nBanks typically allow up to 50% of monthly income towards EMIs (FOIR). Given your current obligations, you could comfortably service an additional monthly EMI of up to **₹30,000 - ₹30,500** for a new home loan.",
-      "intent_detected": "WHAT_IF_LOAN",
-      "verified_data_used": {
-        "monthly_income": 85000,
-        "debt_burden_percent": 14.12,
-        "current_emi": 12000,
-        "monthly_surplus": 38700,
-        "health_score": 92
+      "simulated_metrics": {
+        "monthly_income": 55000,
+        "monthly_expenses": 31000,
+        "monthly_savings": 1749,
+        "monthly_emi": 22251,
+        "monthly_surplus": 1749,
+        "debt_burden_percent": 40.5,
+        "financial_health_score": 55,
+        "stress_level": "HIGH",
+        "new_emi_amount": 16251
       },
-      "language": "en",
-      "created_at": "2026-09-12T07:22:45.776Z"
-    },
-    {
-      "id": "msg_u_1789197777116",
-      "session_id": "ses_cust_rahul",
-      "sender": "USER",
-      "content": "Why are you recommending insurance?",
-      "intent_detected": "INSURANCE_GUIDANCE",
-      "language": "en",
-      "created_at": "2026-09-12T07:22:57.116Z"
-    },
-    {
-      "id": "msg_a_1789197777117",
-      "session_id": "ses_cust_rahul",
-      "sender": "ASSISTANT",
-      "content": "While a traditional term or health insurance policy isn't currently listed under your active recommendations, we highlight financial protection options like the **Suraksha Liquid Emergency Deposit** to safeguard your finances.\n\nHere is why financial safety products are surfaced for your profile:\n- **Emergency Safety Buffer**: It provides a high-yield **7.8%** liquid safety net to protect against unexpected life events without interrupting your wealth creation.\n- **Strong Surplus**: With a healthy savings ratio of **41.18%** and a monthly surplus of **₹38,700**, setting aside emergency reserves fits seamlessly into your monthly budget.",
-      "intent_detected": "INSURANCE_GUIDANCE",
-      "verified_data_used": {
-        "savings_ratio_percent": 41.18,
-        "monthly_surplus": 38700,
-        "emergency_deposit_yield": 7.8
-      },
-      "language": "en",
-      "created_at": "2026-09-12T07:22:57.116Z"
+      "safety_assessment": "HIGH_RISK",
+      "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 40.5% of income. This creates severe liquidity risk.",
+      "created_at": "2026-09-12T07:45:35.496Z"
     }
   ],
-  "what_if_simulations": [],
   "notifications": [
     {
       "id": "notif_rahul_01",
@@ -1194,6 +1129,22 @@
       "policy_decision": "FLAGGED",
       "final_action_taken": "Flagged transaction for multi-factor authorization and notified customer.",
       "timestamp": "2026-09-11T02:46:00.000Z"
+    },
+    {
+      "id": "audit_1789199135494_psgvq",
+      "timestamp": "2026-09-12T07:45:35.494Z",
+      "customer_id": "cust_amit",
+      "event_type": "POLICY_GATEWAY_BLOCK",
+      "ai_engine": "SAFETY_GATEWAY",
+      "input_summary": {
+        "proposed_product": "LOAN",
+        "stress_score": 100
+      },
+      "engine_output": {
+        "block_action": "SUPPRESSED_DONT_SELL_ME"
+      },
+      "policy_decision": "SUPPRESSED_DONT_SELL_ME",
+      "final_action_taken": "Blocked loan promotion; Triggered Don't Sell Me Mode and Financial Assistance."
     }
   ]
 }
