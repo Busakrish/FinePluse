@@ -51,7 +51,7 @@ export const DashboardPage: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [twinRes, recsRes, nbaRes, insRes, txRes, meRes] = await Promise.all([
+      const results = await Promise.allSettled([
         api.get('/ai/financial-twin'),
         api.get('/ai/recommendations'),
         api.get('/ai/next-best-action'),
@@ -60,12 +60,26 @@ export const DashboardPage: React.FC = () => {
         api.get('/customers/me'),
       ]);
 
-      if (twinRes.data.success) setTwin(twinRes.data.financial_twin);
-      if (recsRes.data.success) setRecommendations(recsRes.data.recommendations);
-      if (nbaRes.data.success) setNextBest(nbaRes.data.next_best_action);
-      if (insRes.data.success) setInsights(insRes.data.insights);
-      if (txRes.data.success) setTransactions(txRes.data.transactions.slice(0, 5));
-      if (meRes.data.success) setAccount(meRes.data.account);
+      const [twinRes, recsRes, nbaRes, insRes, txRes, meRes] = results;
+
+      if (twinRes.status === 'fulfilled' && twinRes.value.data.success) {
+        setTwin(twinRes.value.data.financial_twin);
+      }
+      if (recsRes.status === 'fulfilled' && recsRes.value.data.success) {
+        setRecommendations(recsRes.value.data.recommendations);
+      }
+      if (nbaRes.status === 'fulfilled' && nbaRes.value.data.success) {
+        setNextBest(nbaRes.value.data.next_best_action);
+      }
+      if (insRes.status === 'fulfilled' && insRes.value.data.success) {
+        setInsights(insRes.value.data.insights);
+      }
+      if (txRes.status === 'fulfilled' && txRes.value.data.success) {
+        setTransactions(txRes.value.data.transactions.slice(0, 5));
+      }
+      if (meRes.status === 'fulfilled' && meRes.value.data.success) {
+        setAccount(meRes.value.data.account);
+      }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     } finally {

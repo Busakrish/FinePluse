@@ -9,9 +9,15 @@ import { FinancialTwinManager } from '../twin/twinManager.js';
 
 const router = Router();
 
+function getCustomerId(req: AuthenticatedRequest): string | null {
+  if (req.user?.customerId) return req.user.customerId;
+  if (req.user?.role === 'ADMIN') return 'cust_rahul';
+  return null;
+}
+
 // GET /api/ai/financial-twin
 router.get('/financial-twin', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const twin = FinancialTwinManager.refreshTwin(customerId);
@@ -28,7 +34,7 @@ router.get('/financial-twin', authenticate, (req: AuthenticatedRequest, res: Res
 
 // GET /api/ai/financial-health
 router.get('/financial-health', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const twin = FinancialTwinManager.refreshTwin(customerId);
@@ -49,7 +55,7 @@ router.get('/financial-health', authenticate, (req: AuthenticatedRequest, res: R
 
 // GET /api/ai/recommendations (Engine 2 + Explainable AI)
 router.get('/recommendations', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const recResult = RecommendationEngine.generateRecommendations(customerId);
@@ -63,7 +69,7 @@ router.get('/recommendations', authenticate, (req: AuthenticatedRequest, res: Re
 
 // GET /api/ai/stress (Engine 3 + Don't Sell Me Mode)
 router.get('/stress', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const stress = FinancialStressEngine.evaluateStress(customerId);
@@ -80,7 +86,7 @@ router.get('/stress', authenticate, (req: AuthenticatedRequest, res: Response): 
 
 // GET /api/ai/fraud-alerts (Engine 4)
 router.get('/fraud-alerts', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const alerts = db.filter('fraud_alerts', (f) => f.customer_id === customerId);
@@ -89,7 +95,7 @@ router.get('/fraud-alerts', authenticate, (req: AuthenticatedRequest, res: Respo
 
 // GET /api/ai/next-best-action
 router.get('/next-best-action', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const action = NextBestActionEngine.determineAction(customerId);
@@ -98,7 +104,7 @@ router.get('/next-best-action', authenticate, (req: AuthenticatedRequest, res: R
 
 // GET /api/ai/insights
 router.get('/insights', authenticate, (req: AuthenticatedRequest, res: Response): any => {
-  const customerId = req.user?.customerId;
+  const customerId = getCustomerId(req);
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile.' });
 
   const insights = db.filter('ai_insights', (i) => i.customer_id === customerId);
