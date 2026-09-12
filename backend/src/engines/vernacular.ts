@@ -1,15 +1,51 @@
 import { db } from '../db/database.js';
 import { CustomerProfile, Account, Transaction, Loan, FinancialTwin } from '../db/types.js';
 
+import { GeminiService, ChatHistoryItem } from '../services/gemini.service.js';
+
 export interface VernacularChatResponse {
   message: string;
   language: 'en' | 'hi' | 'gu';
   intent: string;
   verified_data: any;
   suggested_actions?: string[];
+  deep_link?: string;
+  model_used?: string;
 }
 
 export class VernacularEngine {
+  /**
+   * Async conversational processing powered by Gemini 2.5 Flash with verified banking grounding.
+   * Gracefully falls back to deterministic engine if Gemini is unavailable.
+   */
+  public static async processQueryWithGemini(
+    customerId: string,
+    queryText: string,
+    languageHint?: 'en' | 'hi' | 'gu',
+    history: ChatHistoryItem[] = []
+  ): Promise<VernacularChatResponse> {
+    try {
+      const geminiResponse = await GeminiService.generateConversationalResponse(
+        customerId,
+        queryText,
+        languageHint,
+        history
+      );
+
+      if (geminiResponse && geminiResponse.message) {
+        return geminiResponse;
+      }
+    } catch (err: any) {
+      console.warn('[FinPulse VernacularEngine] Gemini error, falling back to deterministic engine:', err?.message || err);
+    }
+
+    // Graceful fallback to deterministic offline engine
+    const fallback = this.processQuery(customerId, queryText, languageHint);
+    return {
+      ...fallback,
+      model_used: 'deterministic-offline-fallback',
+    };
+  }
   public static processQuery(
     customerId: string,
     queryText: string,
