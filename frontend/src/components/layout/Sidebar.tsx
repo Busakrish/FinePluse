@@ -20,6 +20,8 @@ import {
   ShieldCheck,
   Building2,
   Eye,
+  Compass,
+  PieChart,
 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -39,18 +41,20 @@ export const Sidebar: React.FC = () => {
   // Retail citizen banking navigation items (Only for regular customers)
   const customerNavItems = [
     { to: '/', label: t('nav_dashboard'), icon: LayoutDashboard, badge: 'Core' },
-    { to: '/twin', label: t('nav_twin'), icon: Cpu, badge: 'Engine 1' },
-    { to: '/health', label: t('nav_health'), icon: Activity, badge: 'Score' },
-    { to: '/recommendations', label: t('nav_recommendations'), icon: Sparkles, badge: 'Engine 2' },
-    { to: '/stress-assistance', label: t('nav_stress_help'), icon: HeartHandshake, badge: 'Guardian', highlight: user?.persona_tag === 'STRESS' },
-    { to: '/transactions', label: t('nav_transactions'), icon: ReceiptText },
-    { to: '/upi', label: t('nav_upi'), icon: Send, badge: 'Demo' },
-    { to: '/assistant', label: t('nav_assistant'), icon: BotMessageSquare, badge: 'Engine 5' },
+    { to: '/assistant', label: 'AI Banking Copilot', icon: BotMessageSquare, badge: 'Copilot' },
+    { to: '/life-events', label: t('nav_life_events') || 'Life Event Prediction AI', icon: Compass, badge: 'Engine 3' },
+    { to: '/spending-coach', label: t('nav_spending_coach') || 'AI Spending Coach', icon: PieChart, badge: 'Coach' },
     { to: '/what-if', label: t('nav_whatif'), icon: Sliders, badge: 'Engine 6' },
-    { to: '/loan-journey', label: t('nav_loans'), icon: Landmark },
-    { to: '/onboarding', label: t('nav_onboarding'), icon: UserCheck },
     { to: '/fraud-security', label: t('nav_fraud'), icon: ShieldAlert, badge: 'Engine 4', alert: user?.persona_tag === 'FRAUD' },
     { to: '/consent', label: t('nav_consent'), icon: Lock, badge: 'DPDPA' },
+  ];
+
+  const customerSecondaryNavItems = [
+    { to: '/transactions', label: t('nav_transactions'), icon: ReceiptText },
+    { to: '/twin', label: t('nav_twin'), icon: Cpu, badge: 'Engine 1' },
+    { to: '/recommendations', label: t('nav_recommendations'), icon: Sparkles, badge: 'Engine 2' },
+    { to: '/stress-assistance', label: t('nav_stress_help'), icon: HeartHandshake, badge: 'Guardian', highlight: user?.persona_tag === 'STRESS' },
+    { to: '/upi', label: t('nav_upi'), icon: Send, badge: 'Demo' },
   ];
 
   // Dedicated Admin & Chief Risk Officer navigation items (Strictly separated)
@@ -142,42 +146,78 @@ export const Sidebar: React.FC = () => {
           </>
         ) : (
           /* RETAIL CITIZEN BANKING NAVIGATION (Zero Admin Links) */
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
-              Retail NetBanking Experience
+          <div className="space-y-4">
+            <div>
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
+                AI Banking Experience
+              </div>
+              <nav className="space-y-1">
+                {customerNavItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                          isActive
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-xs font-bold'
+                            : item.alert
+                            ? 'bg-rose-50 text-rose-800 border border-rose-300 font-bold'
+                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        }`
+                      }
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <Icon className="w-4 h-4 shrink-0 text-blue-600" />
+                        <span className="truncate">{item.label}</span>
+                      </div>
+                      {item.badge && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+                          {item.badge}
+                        </span>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </nav>
             </div>
-            <nav className="space-y-1">
-              {customerNavItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    className={({ isActive }) =>
-                      `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
-                        isActive
-                          ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-xs font-bold'
-                          : item.highlight
-                          ? 'bg-amber-50 text-amber-800 border border-amber-300 font-bold animate-pulse'
-                          : item.alert
-                          ? 'bg-rose-50 text-rose-800 border border-rose-300 font-bold'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                      }`
-                    }
-                  >
-                    <div className="flex items-center gap-2.5 truncate">
-                      <Icon className="w-4 h-4 shrink-0" />
-                      <span className="truncate">{item.label}</span>
-                    </div>
-                    {item.badge && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
-                        {item.badge}
-                      </span>
-                    )}
-                  </NavLink>
-                );
-              })}
-            </nav>
+
+            <div>
+              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
+                Accounts &amp; Services
+              </div>
+              <nav className="space-y-1">
+                {customerSecondaryNavItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                          isActive
+                            ? 'bg-slate-100 text-slate-900 border border-slate-300 font-bold shadow-xs'
+                            : item.highlight
+                            ? 'bg-amber-50 text-amber-800 border border-amber-300 font-bold animate-pulse'
+                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        }`
+                      }
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <Icon className="w-4 h-4 shrink-0 text-slate-500" />
+                        <span className="truncate">{item.label}</span>
+                      </div>
+                      {item.badge && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+                          {item.badge}
+                        </span>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </nav>
+            </div>
           </div>
         )}
       </div>

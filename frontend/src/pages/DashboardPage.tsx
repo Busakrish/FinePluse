@@ -12,6 +12,9 @@ import {
   Send,
   ShieldCheck,
   ChevronRight,
+  Compass,
+  PieChart as PieChartIcon,
+  BotMessageSquare,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
@@ -33,8 +36,6 @@ import { FinancialTwin, Recommendation, NextBestAction, AIInsight, Transaction, 
 import { GuardianPill } from '../components/GuardianPill';
 import { DontSellMeBanner } from '../components/DontSellMeBanner';
 import { ExplainModal } from '../components/ExplainModal';
-import { LifeEventPredictionWidget } from '../components/LifeEventPredictionWidget';
-import { SpendingCoachWidget } from '../components/SpendingCoachWidget';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -48,6 +49,8 @@ export const DashboardPage: React.FC = () => {
   const [insights, setInsights] = useState<AIInsight[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedRecForExplain, setSelectedRecForExplain] = useState<Recommendation | null>(null);
+  const [lifeEventSummary, setLifeEventSummary] = useState<{ count: number; topTitle?: string; restricted?: boolean } | null>(null);
+  const [spendingSummary, setSpendingSummary] = useState<{ healthLevel: string; score: number; burnRate: string; opportunitiesCount: number; restricted?: boolean } | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -59,9 +62,11 @@ export const DashboardPage: React.FC = () => {
         api.get('/ai/insights'),
         api.get('/transactions'),
         api.get('/customers/me'),
+        api.get('/life-events'),
+        api.get('/spending/coach'),
       ]);
 
-      const [twinRes, recsRes, nbaRes, insRes, txRes, meRes] = results;
+      const [twinRes, recsRes, nbaRes, insRes, txRes, meRes, lifeRes, spendRes] = results;
 
       if (twinRes.status === 'fulfilled' && twinRes.value.data.success) {
         setTwin(twinRes.value.data.financial_twin);
@@ -80,6 +85,24 @@ export const DashboardPage: React.FC = () => {
       }
       if (meRes.status === 'fulfilled' && meRes.value.data.success) {
         setAccount(meRes.value.data.account);
+      }
+      if (lifeRes && lifeRes.status === 'fulfilled' && lifeRes.value.data.success) {
+        const events = lifeRes.value.data.events || [];
+        setLifeEventSummary({
+          count: events.length,
+          topTitle: events[0]?.title,
+          restricted: lifeRes.value.data.consent_restricted,
+        });
+      }
+      if (spendRes && spendRes.status === 'fulfilled' && spendRes.value.data.success) {
+        const coach = spendRes.value.data;
+        setSpendingSummary({
+          healthLevel: coach.spending_health?.health_level || 'GOOD',
+          score: coach.spending_health?.score || 80,
+          burnRate: coach.spending_health?.burn_rate_status || 'NORMAL',
+          opportunitiesCount: coach.opportunities?.length || 0,
+          restricted: coach.consent_restricted,
+        });
       }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -274,11 +297,115 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* Upcoming Financial Life Events - Proactive Milestone Intelligence */}
-      <LifeEventPredictionWidget />
+      {/* AI Intelligence Hub - Lightweight Preview & Navigation Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* 1. Life Event Prediction AI Preview */}
+        <div className="bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/40 border border-indigo-100 p-5 rounded-2xl shadow-xs flex flex-col justify-between hover:shadow-md hover:border-indigo-200 transition-all group">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-600/10 text-indigo-700 flex items-center justify-center font-bold">
+                <Compass className="w-5 h-5 text-indigo-600 group-hover:rotate-45 transition-transform duration-300" />
+              </div>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-100/80 text-indigo-700 border border-indigo-200/60">
+                Milestones
+              </span>
+            </div>
+            <h4 className="text-sm font-bold text-slate-900 mb-1">
+              Life Event Milestones
+            </h4>
+            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+              {lifeEventSummary?.restricted
+                ? 'Consent required to unlock life event milestone intelligence.'
+                : lifeEventSummary?.topTitle
+                ? `Detected milestone: ${lifeEventSummary.topTitle} with proactive liquidity guardrails.`
+                : 'Proactive detection of upcoming life milestones like career transitions, weddings, and investments.'}
+            </p>
+          </div>
 
-      {/* AI Spending Coach - Real-time Overspending Alerts & Coaching */}
-      <SpendingCoachWidget />
+          <div className="pt-4 mt-3 border-t border-indigo-100/60 flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-indigo-700">
+              {lifeEventSummary?.count ? `${lifeEventSummary.count} Active Signals` : 'Proactive Monitor'}
+            </span>
+            <Link
+              to="/life-events"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-800 group-hover:translate-x-0.5 transition-transform"
+            >
+              <span>View Predicted Milestones</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* 2. AI Spending Coach Preview */}
+        <div className="bg-gradient-to-br from-emerald-50/70 via-white to-teal-50/40 border border-emerald-100 p-5 rounded-2xl shadow-xs flex flex-col justify-between hover:shadow-md hover:border-emerald-200 transition-all group">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-600/10 text-emerald-700 flex items-center justify-center font-bold">
+                <PieChartIcon className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100/80 text-emerald-700 border border-emerald-200/60">
+                Spending Coach
+              </span>
+            </div>
+            <h4 className="text-sm font-bold text-slate-900 mb-1">
+              AI Spending Coach
+            </h4>
+            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+              {spendingSummary?.restricted
+                ? 'Consent required to compute personalized overspending diagnostics.'
+                : spendingSummary
+                ? `Budget health is ${spendingSummary.healthLevel} (${spendingSummary.score}/100) with ${spendingSummary.opportunitiesCount} savings tips.`
+                : 'Real-time cashflow diagnostics, overspending alerts, and month-end burn rate projections.'}
+            </p>
+          </div>
+
+          <div className="pt-4 mt-3 border-t border-emerald-100/60 flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-emerald-700">
+              {spendingSummary ? `Score: ${spendingSummary.score}/100` : 'Real-time Guard'}
+            </span>
+            <Link
+              to="/spending-coach"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 group-hover:translate-x-0.5 transition-transform"
+            >
+              <span>View Spending Insights</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* 3. AI Chatbot Copilot Preview */}
+        <div className="bg-gradient-to-br from-blue-50/70 via-white to-cyan-50/40 border border-blue-100 p-5 rounded-2xl shadow-xs flex flex-col justify-between hover:shadow-md hover:border-blue-200 transition-all group">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-700 flex items-center justify-center font-bold">
+                <BotMessageSquare className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-blue-100/80 text-blue-700 border border-blue-200/60">
+                Copilot 24/7
+              </span>
+            </div>
+            <h4 className="text-sm font-bold text-slate-900 mb-1">
+              AI Banking Copilot
+            </h4>
+            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+              Ask questions in English, Hindi, or Gujarati: "Can I afford a new loan?" or "Where did I overspend this week?"
+            </p>
+          </div>
+
+          <div className="pt-4 mt-3 border-t border-blue-100/60 flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-blue-700">
+              Voice & Text Ready
+            </span>
+            <Link
+              to="/assistant"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 group-hover:translate-x-0.5 transition-transform"
+            >
+              <span>Chat with Copilot</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* Two Column Layout: Recommendations & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

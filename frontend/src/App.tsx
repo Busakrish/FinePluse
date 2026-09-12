@@ -22,6 +22,8 @@ import { ConsentCenterPage } from './pages/ConsentCenterPage';
 import { AdminDecisionMonitorPage } from './pages/AdminDecisionMonitorPage';
 import { AuditLogPage } from './pages/AuditLogPage';
 import { LoginPage } from './pages/LoginPage';
+import { LifeEventsPage } from './pages/LifeEventsPage';
+import { SpendingCoachPage } from './pages/SpendingCoachPage';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -120,6 +122,38 @@ export const App: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <Layout><ConversationalAssistantPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/life-events"
+              element={
+                <ProtectedRoute>
+                  <Layout><LifeEventsPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/customer/life-events"
+              element={
+                <ProtectedRoute>
+                  <Layout><LifeEventsPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/spending-coach"
+              element={
+                <ProtectedRoute>
+                  <Layout><SpendingCoachPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/customer/spending-coach"
+              element={
+                <ProtectedRoute>
+                  <Layout><SpendingCoachPage /></Layout>
                 </ProtectedRoute>
               }
             />

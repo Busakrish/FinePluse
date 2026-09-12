@@ -146,7 +146,7 @@ export const LoginPage: React.FC = () => {
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
-                  type="email"
+                  type="text"
                   autoComplete="username"
                   placeholder="Enter registered email address"
                   value={custEmail}
@@ -196,7 +196,7 @@ export const LoginPage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => alert('For security, password reset instructions have been forwarded to bank customer support.')}
+                onClick={() => alert('For security assistance or password reset, please contact your branch or administrator.')}
                 className="text-blue-700 hover:text-blue-900 font-bold hover:underline"
               >
                 Trouble Logging In?
@@ -242,9 +242,9 @@ export const LoginPage: React.FC = () => {
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <input
-                  type="email"
+                  type="text"
                   autoComplete="username"
-                  placeholder="e.g. officer@finpulse.bharat"
+                  placeholder="Enter official bank personnel email"
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
                   required
