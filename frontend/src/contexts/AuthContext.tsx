@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
   switchScenario: (personaTag: string) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -20,42 +20,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
 
   const refreshUser = async () => {
+    const storedToken = localStorage.getItem('finpulse_token');
+    if (!storedToken) {
+      setUser(null);
+      setToken(null);
+      setLoading(false);
+      return;
+    }
+
     try {
-      if (token) {
-        const res = await api.get('/auth/me');
-        if (res.data.success) {
-          setUser(res.data.user);
-        }
+      const res = await api.get('/auth/me');
+      if (res.data.success && res.data.user) {
+        setUser(res.data.user);
+        setToken(storedToken);
+      } else {
+        localStorage.removeItem('finpulse_token');
+        setToken(null);
+        setUser(null);
       }
     } catch (err) {
-      console.warn('Error refreshing user session:', err);
+      console.warn('Session expired or invalid token:', err);
+      localStorage.removeItem('finpulse_token');
+      setToken(null);
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (token) {
-      refreshUser();
-    } else {
-      // Auto-login to Customer A (Healthy) by default for frictionless demo judge inspection
-      switchScenario('HEALTHY');
-    }
+    refreshUser();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> => {
+    setLoading(true);
     try {
       const res = await api.post('/auth/login', { email, password });
       if (res.data.success) {
         localStorage.setItem('finpulse_token', res.data.token);
         setToken(res.data.token);
         setUser(res.data.user);
-        return true;
+        return { success: true, user: res.data.user };
+      } else {
+        return { success: false, error: res.data.error || 'Authentication failed.' };
       }
-    } catch (err) {
-      console.error('Login failed:', err);
+    } catch (err: any) {
+      console.error('Login error:', err);
+      const errMsg = err.response?.data?.error || 'Invalid credentials or network failure.';
+      return { success: false, error: errMsg };
+    } finally {
+      setLoading(false);
     }
-    return false;
   };
 
   const switchScenario = async (personaTag: string): Promise<boolean> => {
@@ -80,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('finpulse_token');
     setToken(null);
     setUser(null);
+    setLoading(false);
   };
 
   return (

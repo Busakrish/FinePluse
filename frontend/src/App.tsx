@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { Header } from './components/layout/Header';
 import { Sidebar } from './components/layout/Sidebar';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 import { DashboardPage } from './pages/DashboardPage';
 import { FinancialTwinPage } from './pages/FinancialTwinPage';
@@ -36,28 +37,152 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
+// Redirect to appropriate landing if already logged in
+const LoginRoute: React.FC = () => {
+  const { user, token, loading } = useAuth();
+  if (loading) {
+    return null;
+  }
+  if (token && user) {
+    return <Navigate to={user.role === 'ADMIN' ? '/admin' : '/'} replace />;
+  }
+  return <LoginPage />;
+};
+
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <LanguageProvider>
         <AuthProvider>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<Layout><DashboardPage /></Layout>} />
-            <Route path="/twin" element={<Layout><FinancialTwinPage /></Layout>} />
-            <Route path="/health" element={<Layout><FinancialHealthPage /></Layout>} />
-            <Route path="/recommendations" element={<Layout><RecommendationsPage /></Layout>} />
-            <Route path="/stress-assistance" element={<Layout><StressAssistancePage /></Layout>} />
-            <Route path="/transactions" element={<Layout><TransactionsPage /></Layout>} />
-            <Route path="/upi" element={<Layout><SimulatedUpiPage /></Layout>} />
-            <Route path="/assistant" element={<Layout><ConversationalAssistantPage /></Layout>} />
-            <Route path="/what-if" element={<Layout><WhatIfPage /></Layout>} />
-            <Route path="/loan-journey" element={<Layout><LoanJourneyPage /></Layout>} />
-            <Route path="/onboarding" element={<Layout><OnboardingKycPage /></Layout>} />
-            <Route path="/fraud-security" element={<Layout><FraudSecurityPage /></Layout>} />
-            <Route path="/consent" element={<Layout><ConsentCenterPage /></Layout>} />
-            <Route path="/admin" element={<Layout><AdminDecisionMonitorPage /></Layout>} />
-            <Route path="/audit-logs" element={<Layout><AuditLogPage /></Layout>} />
+            {/* Public Authentication Route */}
+            <Route path="/login" element={<LoginRoute />} />
+
+            {/* Retail Customer Banking Routes (Protected) */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout><DashboardPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/twin"
+              element={
+                <ProtectedRoute>
+                  <Layout><FinancialTwinPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/health"
+              element={
+                <ProtectedRoute>
+                  <Layout><FinancialHealthPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/recommendations"
+              element={
+                <ProtectedRoute>
+                  <Layout><RecommendationsPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stress-assistance"
+              element={
+                <ProtectedRoute>
+                  <Layout><StressAssistancePage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <ProtectedRoute>
+                  <Layout><TransactionsPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/upi"
+              element={
+                <ProtectedRoute>
+                  <Layout><SimulatedUpiPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assistant"
+              element={
+                <ProtectedRoute>
+                  <Layout><ConversationalAssistantPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/what-if"
+              element={
+                <ProtectedRoute>
+                  <Layout><WhatIfPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/loan-journey"
+              element={
+                <ProtectedRoute>
+                  <Layout><LoanJourneyPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Layout><OnboardingKycPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fraud-security"
+              element={
+                <ProtectedRoute>
+                  <Layout><FraudSecurityPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/consent"
+              element={
+                <ProtectedRoute>
+                  <Layout><ConsentCenterPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* STRICT ADMIN & RISK OFFICER ROUTES (Requires ADMIN Role) */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute roleRequired="ADMIN">
+                  <Layout><AdminDecisionMonitorPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/audit-logs"
+              element={
+                <ProtectedRoute roleRequired="ADMIN">
+                  <Layout><AuditLogPage /></Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AuthProvider>

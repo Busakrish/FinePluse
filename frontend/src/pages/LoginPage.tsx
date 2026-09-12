@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Sparkles, ArrowRight, ShieldCheck, Users, Building2, CheckCircle2, Shield } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Lock, Mail, Sparkles, ArrowRight, ShieldCheck, Users, Building2, CheckCircle2, Shield, ShieldAlert, KeyRound } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -8,148 +8,295 @@ export const LoginPage: React.FC = () => {
   const { login, switchScenario, loading } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [email, setEmail] = useState('rahul@finpulse.bharat');
-  const [password, setPassword] = useState('password123');
+  // 'CUSTOMER' or 'ADMIN' login mode
+  const [activeTab, setActiveTab] = useState<'CUSTOMER' | 'ADMIN'>('CUSTOMER');
+
+  // Customer credentials
+  const [custEmail, setCustEmail] = useState('rahul@finpulse.bharat');
+  const [custPassword, setCustPassword] = useState('password123');
+
+  // Admin credentials
+  const [adminEmail, setAdminEmail] = useState('admin@finpulse.bharat');
+  const [adminPassword, setAdminPassword] = useState('admin123');
+
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleCustomerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const success = await login(email, password);
-    if (success) {
+    const result = await login(custEmail, custPassword);
+    if (result.success) {
       navigate('/');
     } else {
-      setError('Invalid credentials. You can also use the 1-click persona switchers below.');
+      setError(result.error || 'Invalid customer credentials. Please verify your email and password.');
+    }
+  };
+
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    const result = await login(adminEmail, adminPassword);
+    if (result.success) {
+      if (result.user?.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        setError('Access Denied: This account does not possess Admin/CRO privileges.');
+      }
+    } else {
+      setError(result.error || 'Invalid administrative credentials.');
     }
   };
 
   const handlePersonaLogin = async (tag: string) => {
+    setError(null);
     const success = await switchScenario(tag);
     if (success) {
-      navigate('/');
+      if (tag === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
   };
 
-  const personas = [
-    { tag: 'HEALTHY', name: 'Rahul Verma', role: 'Disciplined Saver (41% Surplus, Tier 1)', badge: 'Low Risk' },
+  const customerPersonas = [
+    { tag: 'HEALTHY', name: 'Rahul Verma', role: 'Disciplined Saver (41% Surplus)', badge: 'Low Risk' },
     { tag: 'MODERATE', name: 'Priya Patel', role: 'Moderate Saver (Surat, Gujarat)', badge: 'Medium Risk' },
-    { tag: 'STRESS', name: 'Amit Sharma', role: "HIGH STRESS / Don't Sell Me Mode", badge: 'Protection Active' },
-    { tag: 'FRAUD', name: 'Vikram Rao', role: 'Fraud Spike Anomaly Flagged (₹85k)', badge: 'Z-Score 4.8σ' },
-    { tag: 'VERNACULAR', name: 'Ramesh Patel', role: 'Gujarati Farmer (Anand, Gujarat)', badge: 'Vernacular AI' },
-    { tag: 'WHATIF', name: 'Sunita Devi', role: 'What-If Loan Simulator (Teacher)', badge: 'Simulation' },
-    { tag: 'ADMIN', name: 'Rajesh Gupta', role: 'Chief Risk & Compliance Officer', badge: 'Admin Portal' },
+    { tag: 'STRESS', name: 'Amit Sharma', role: "HIGH STRESS / Don't Sell Me Mode", badge: 'Protection' },
+    { tag: 'FRAUD', name: 'Vikram Rao', role: 'Fraud Outlier Flagged (₹85k)', badge: 'Z-Score 4.8σ' },
+    { tag: 'VERNACULAR', name: 'Ramesh Patel', role: 'Gujarati Farmer (Anand)', badge: 'Vernacular' },
+    { tag: 'WHATIF', name: 'Sunita Devi', role: 'Loan Simulator (Teacher)', badge: 'Simulation' },
   ];
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center p-4">
-      <div className="w-full max-w-xl bg-white border border-slate-200 p-8 sm:p-10 rounded-3xl space-y-6 shadow-sm">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
+      <div className="w-full max-w-xl bg-white border border-slate-200 p-6 sm:p-10 rounded-3xl space-y-6 shadow-sm">
         {/* Institutional Banking Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 text-white shadow-xs">
-            <span className="text-2xl font-black tracking-wider">FP</span>
+          <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl text-white shadow-xs font-black tracking-wider text-2xl ${
+            activeTab === 'ADMIN'
+              ? 'bg-purple-700 shadow-purple-700/20'
+              : 'bg-blue-600 shadow-blue-600/20'
+          }`}>
+            FP
           </div>
           <div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">FINPULSE BHARAT NETBANKING</h2>
             <p className="text-xs text-blue-700 font-bold mt-0.5">Empathetic, Transparent & Explainable Banking for Millions</p>
           </div>
+
           <div className="flex items-center justify-center gap-2 pt-1">
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
               RBI Sandbox Compliant
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1">
-              <Lock className="w-3 h-3 text-blue-600" />
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1">
+              <Lock className="w-3.5 h-3.5 text-blue-600" />
               DPDPA 2023 Enforced
             </span>
           </div>
         </div>
 
-        {/* 1-Click Judge Persona Fast Login */}
-        <div className="space-y-3 p-4 sm:p-5 rounded-2xl bg-blue-50/50 border border-blue-200">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-            <span className="flex items-center gap-1.5 text-blue-900">
-              <Users className="w-4 h-4 text-blue-700" />
-              1-Click Fast Persona Switch (For Demo Evaluation)
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-extrabold border border-emerald-200">Instant Access</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-            {personas.map((p) => (
-              <button
-                key={p.tag}
-                type="button"
-                onClick={() => handlePersonaLogin(p.tag)}
-                className="p-3 rounded-xl text-left bg-white hover:bg-blue-50/80 border border-slate-200 hover:border-blue-300 transition flex items-center justify-between group shadow-2xs"
-              >
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 transition">{p.name}</span>
-                    <span className={`text-[9px] font-black px-1.5 py-0.2 rounded border ${
-                      p.tag === 'STRESS' ? 'bg-amber-100 text-amber-800 border-amber-300' :
-                      p.tag === 'FRAUD' ? 'bg-rose-100 text-rose-800 border-rose-300' :
-                      p.tag === 'ADMIN' ? 'bg-purple-100 text-purple-800 border-purple-300' :
-                      'bg-slate-100 text-slate-700 border-slate-200'
-                    }`}>
-                      {p.badge}
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 truncate max-w-[170px] mt-0.5">{p.role}</div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition shrink-0" />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Standard Credentials Form */}
-        <form onSubmit={handleLogin} className="space-y-4 pt-1">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Registered Customer ID or Email</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-blue-600 transition"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Password / Secure MPIN</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-blue-600 transition"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
-              {error}
-            </div>
-          )}
+        {/* Role Separation Tabs: Retail vs Admin */}
+        <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('CUSTOMER');
+              setError(null);
+            }}
+            className={`py-2.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'CUSTOMER'
+                ? 'bg-white text-blue-800 shadow-xs border border-slate-200'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <span>Retail NetBanking</span>
+          </button>
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition-all"
+            type="button"
+            onClick={() => {
+              setActiveTab('ADMIN');
+              setError(null);
+            }}
+            className={`py-2.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'ADMIN'
+                ? 'bg-purple-700 text-white shadow-xs border border-purple-700'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
-            {loading ? 'Authenticating...' : 'Sign In with Bank Credentials'}
+            <ShieldAlert className="w-4 h-4 text-purple-300" />
+            <span>Bank Officer / Admin</span>
           </button>
-        </form>
+        </div>
+
+        {/* TAB 1: RETAIL CUSTOMER LOGIN */}
+        {activeTab === 'CUSTOMER' && (
+          <div className="space-y-5 animate-in fade-in duration-150">
+            {/* 1-Click Fast Persona Switcher for Judges */}
+            <div className="space-y-3 p-4 rounded-2xl bg-blue-50/50 border border-blue-200">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                <span className="flex items-center gap-1.5 text-blue-900">
+                  <Users className="w-4 h-4 text-blue-700" />
+                  1-Click Citizen Personas (For Demo Evaluation)
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-extrabold border border-emerald-200">Instant Access</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                {customerPersonas.map((p) => (
+                  <button
+                    key={p.tag}
+                    type="button"
+                    onClick={() => handlePersonaLogin(p.tag)}
+                    className="p-2.5 rounded-xl text-left bg-white hover:bg-blue-50/80 border border-slate-200 hover:border-blue-300 transition flex items-center justify-between group shadow-2xs"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-900 group-hover:text-blue-700 transition">{p.name}</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                          {p.badge}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 truncate max-w-[170px] mt-0.5">{p.role}</div>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition shrink-0" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Standard Retail Customer Credentials */}
+            <form onSubmit={handleCustomerLogin} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Registered Customer Email or Mobile</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    type="email"
+                    value={custEmail}
+                    onChange={(e) => setCustEmail(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-blue-600 transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">NetBanking Password / Secure MPIN</label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    type="password"
+                    value={custPassword}
+                    onChange={(e) => setCustPassword(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-blue-600 transition"
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition-all"
+              >
+                {loading ? 'Verifying Credentials...' : 'Sign In to Retail NetBanking'}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 2: BANK OFFICER / ADMIN PORTAL LOGIN */}
+        {activeTab === 'ADMIN' && (
+          <div className="space-y-5 animate-in fade-in duration-150">
+            <div className="p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-2">
+              <div className="flex items-center gap-2 text-purple-900 font-bold text-xs">
+                <ShieldAlert className="w-4 h-4 text-purple-700" />
+                <span>Authorized Regulatory & Compliance Access Only</span>
+              </div>
+              <p className="text-[11px] text-purple-800 leading-relaxed">
+                This portal grants administrative oversight into live AI decision matrices, policy intercept streams, and regulatory audit ledgers under Section 34 of the RBI Fair Practices Code.
+              </p>
+            </div>
+
+            {/* 1-Click Fast Admin Switch */}
+            <div className="p-3.5 rounded-2xl bg-white border border-purple-200 shadow-2xs space-y-2">
+              <div className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                1-Click Chief Risk Officer Sign-In
+              </div>
+              <button
+                type="button"
+                onClick={() => handlePersonaLogin('ADMIN')}
+                className="w-full p-3 rounded-xl text-left bg-purple-50 hover:bg-purple-100/70 border border-purple-300 transition flex items-center justify-between group"
+              >
+                <div>
+                  <div className="text-xs font-black text-purple-900">Rajesh Gupta</div>
+                  <div className="text-[11px] text-purple-700 font-medium">Chief Risk & AI Compliance Officer (Full CRO Privileges)</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-purple-700 group-hover:translate-x-1 transition shrink-0" />
+              </button>
+            </div>
+
+            {/* Standard Officer Credentials Form */}
+            <form onSubmit={handleAdminLogin} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Official Bank Personnel Email</label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    type="email"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-purple-600 transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Officer Security Token / Password</label>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    type="password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-medium focus:bg-white focus:outline-none focus:border-purple-600 transition"
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider bg-purple-700 hover:bg-purple-800 text-white shadow-xs transition-all"
+              >
+                {loading ? 'Authenticating Officer...' : 'Authorize & Enter Risk Portal'}
+              </button>
+            </form>
+          </div>
+        )}
 
         <div className="pt-2 text-center text-[11px] text-slate-500 font-medium">
-          Protected by 256-bit encryption • Sovereign citizen data stored within Indian boundaries
+          Protected by 256-bit TLS encryption • Sovereign citizen data isolated under RBI guidelines
         </div>
       </div>
     </div>

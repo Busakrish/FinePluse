@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Users, ChevronDown, Check, Sparkles, Shield, AlertTriangle, Languages, Sliders, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -7,6 +8,8 @@ export const ScenarioSwitcher: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, switchScenario, loading } = useAuth();
   const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const scenarios = [
     {
@@ -88,7 +91,14 @@ export const ScenarioSwitcher: React.FC = () => {
     if (id === 'VERNACULAR') {
       setLanguage('gu');
     }
-    await switchScenario(id);
+    const success = await switchScenario(id);
+    if (success) {
+      if (id === 'ADMIN') {
+        navigate('/admin');
+      } else if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/audit-logs')) {
+        navigate('/');
+      }
+    }
   };
 
   return (
