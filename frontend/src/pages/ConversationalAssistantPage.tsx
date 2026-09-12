@@ -104,15 +104,15 @@ export const ConversationalAssistantPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-4 h-[calc(100vh-120px)] flex flex-col animate-in fade-in duration-200">
       {/* Top Banner: Verified Backend Pipeline Badge */}
-      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 text-xs">
-        <div className="flex items-center gap-2 text-indigo-200">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+      <div className="flex items-center justify-between p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs shadow-xs">
+        <div className="flex items-center gap-2.5 text-blue-900 font-medium">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
-            <strong>Verified Banking Intelligence:</strong> AI responses use verified core backend balances & EMI data. Zero hallucinations.
+            <strong className="text-blue-950">Verified Banking Assistant (Engine 5):</strong> Multilingual vernacular AI powered by verified core banking records. Zero hallucinations.
           </span>
         </div>
-        <span className="hidden sm:inline-block px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-          Demo AI Mode Active
+        <span className="hidden sm:inline-block px-2.5 py-1 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+          Deterministic Verified Facts
         </span>
       </div>
 
@@ -122,7 +122,7 @@ export const ConversationalAssistantPage: React.FC = () => {
           <button
             key={idx}
             onClick={() => handleSendMessage(p.query)}
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-indigo-300 border border-slate-700 hover:border-indigo-500/50 transition"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-blue-50 text-blue-700 border border-slate-200 shadow-xs transition"
           >
             {p.label}
           </button>
@@ -130,13 +130,13 @@ export const ConversationalAssistantPage: React.FC = () => {
       </div>
 
       {/* Chat Messages Container */}
-      <div className="flex-1 glass-panel p-4 sm:p-6 rounded-3xl overflow-y-auto space-y-4">
+      <div className="flex-1 bg-white border border-slate-200 p-4 sm:p-6 rounded-3xl overflow-y-auto space-y-4 shadow-xs">
         {messages.map((m) => {
           const isUser = m.sender === 'USER';
           return (
             <div key={m.id} className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
               {!isUser && (
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-600/30">
+                <div className="w-8 h-8 rounded-xl bg-blue-700 text-white flex items-center justify-center shrink-0 shadow-sm">
                   <BotMessageSquare className="w-4 h-4" />
                 </div>
               )}
@@ -145,16 +145,16 @@ export const ConversationalAssistantPage: React.FC = () => {
                 <div
                   className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                     isUser
-                      ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-br-none shadow-lg'
-                      : 'bg-slate-800/90 border border-slate-700 text-slate-100 rounded-bl-none shadow-md'
+                      ? 'bg-blue-700 text-white rounded-br-none shadow-xs font-medium'
+                      : 'bg-slate-50 border border-slate-200 text-slate-900 rounded-bl-none shadow-xs'
                   }`}
                 >
                   <p className="whitespace-pre-line">{m.content}</p>
 
                   {/* Factual Backend Verified Tag */}
                   {!isUser && m.intent && m.intent !== 'UNKNOWN' && (
-                    <div className="mt-2.5 pt-2 border-t border-slate-700/60 flex items-center gap-1.5 text-[10px] text-emerald-400 font-semibold">
-                      <CheckCircle className="w-3 h-3" />
+                    <div className="mt-2.5 pt-2 border-t border-slate-200 flex items-center gap-1.5 text-[10px] text-emerald-700 font-bold">
+                      <CheckCircle className="w-3.5 h-3.5" />
                       <span>Verified Intent: {m.intent}</span>
                     </div>
                   )}
@@ -167,7 +167,7 @@ export const ConversationalAssistantPage: React.FC = () => {
                       <button
                         key={aIdx}
                         onClick={() => handleSendMessage(action)}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/20 transition"
+                        className="px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-blue-50 text-blue-700 border border-slate-200 shadow-xs transition"
                       >
                         {action} →
                       </button>
@@ -177,7 +177,7 @@ export const ConversationalAssistantPage: React.FC = () => {
               </div>
 
               {isUser && (
-                <div className="w-8 h-8 rounded-xl bg-slate-700 text-white flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 font-bold text-xs">
                   <User className="w-4 h-4" />
                 </div>
               )}
@@ -186,9 +186,9 @@ export const ConversationalAssistantPage: React.FC = () => {
         })}
 
         {loading && (
-          <div className="flex items-center gap-2 p-3 rounded-2xl bg-slate-800/60 border border-slate-700 text-xs text-slate-300 w-fit">
-            <Sparkles className="w-4 h-4 text-indigo-400 animate-spin" />
-            <span>FinPulse AI is analyzing verified data in {language === 'gu' ? 'Gujarati' : language === 'hi' ? 'Hindi' : 'English'}...</span>
+          <div className="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 w-fit shadow-xs">
+            <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
+            <span>FinPulse AI is analyzing verified core data in {language === 'gu' ? 'Gujarati' : language === 'hi' ? 'Hindi' : 'English'}...</span>
           </div>
         )}
 
@@ -214,12 +214,12 @@ export const ConversationalAssistantPage: React.FC = () => {
               ? 'यहाँ लिखें (जैसे: मेरा बैलेंस कितना है?...)'
               : 'Ask in English, Hindi ("Mera EMI"), or Gujarati ("Maru balance")...'
           }
-          className="flex-1 px-5 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-indigo-500 shadow-xl"
+          className="flex-1 px-5 py-3.5 rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 shadow-xs font-medium"
         />
         <button
           type="submit"
           disabled={loading || !inputText.trim()}
-          className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-600/30 transition-all disabled:opacity-50"
+          className="px-6 py-3.5 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs sm:text-sm shadow-xs transition-all disabled:opacity-50"
         >
           <Send className="w-4 h-4" />
         </button>

@@ -13,28 +13,28 @@ export const GuardianPill: React.FC<GuardianPillProps> = ({ status, className = 
   switch (status) {
     case 'HELP':
       return (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30 ${className}`}>
+        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 shadow-xs ${className}`}>
           <HeartHandshake className="w-3.5 h-3.5" />
           <span>{t('guardian_help')}</span>
         </div>
       );
     case 'PROTECT':
       return (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30 animate-pulse ${className}`}>
+        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-800 border border-rose-300 shadow-xs animate-pulse ${className}`}>
           <ShieldAlert className="w-3.5 h-3.5" />
           <span>{t('guardian_protect')}</span>
         </div>
       );
     case 'WARN':
       return (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/15 text-orange-400 border border-orange-500/30 ${className}`}>
+        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-800 border border-orange-300 shadow-xs ${className}`}>
           <Shield className="w-3.5 h-3.5" />
           <span>{t('guardian_warn')}</span>
         </div>
       );
     case 'STAY_SILENT':
       return (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-700/50 text-slate-300 border border-slate-600/40 ${className}`}>
+        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300 shadow-xs ${className}`}>
           <EyeOff className="w-3.5 h-3.5" />
           <span>{t('guardian_silent')}</span>
         </div>
@@ -42,7 +42,7 @@ export const GuardianPill: React.FC<GuardianPillProps> = ({ status, className = 
     case 'RECOMMEND':
     default:
       return (
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 ${className}`}>
+        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-xs ${className}`}>
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>{t('guardian_recommend')}</span>
         </div>

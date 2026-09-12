@@ -24,7 +24,7 @@ import { LoginPage } from './pages/LoginPage';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-900 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
       <Header />
       <div className="flex-1 flex flex-col md:flex-row">
         <Sidebar />

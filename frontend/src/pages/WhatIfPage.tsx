@@ -48,16 +48,22 @@ export const WhatIfPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900 text-white p-6 sm:p-8 rounded-3xl shadow-sm relative overflow-hidden">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-2xl bg-white/20 text-white backdrop-blur-xs">
             <Calculator className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white">Financial What-If Simulator (Engine 6)</h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-              Deterministic scenario projection: Simulate loan obligations, income shocks, or savings plans before committing.
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-white uppercase tracking-wider backdrop-blur-xs">
+                AI Engine 6 • Deterministic Modeling
+              </span>
+              <span className="text-xs text-blue-200">Amortization Simulator</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white mt-1">Financial What-If Scenario Simulator</h2>
+            <p className="text-xs sm:text-sm text-blue-100 mt-0.5 leading-relaxed">
+              Test how new loans, salary adjustments, or expense cuts affect your family budget before committing. Powered by exact mathematical amortization.
             </p>
           </div>
         </div>
@@ -68,8 +74,8 @@ export const WhatIfPage: React.FC = () => {
             onClick={() => setSimType('TAKE_LOAN')}
             className={`p-3 rounded-xl text-xs font-bold text-left transition border ${
               simType === 'TAKE_LOAN'
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-md'
-                : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
+                ? 'bg-white text-blue-900 border-white shadow-md'
+                : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
             }`}
           >
             💳 "What if I take a Loan?"
@@ -78,8 +84,8 @@ export const WhatIfPage: React.FC = () => {
             onClick={() => setSimType('INCOME_DECREASE')}
             className={`p-3 rounded-xl text-xs font-bold text-left transition border ${
               simType === 'INCOME_DECREASE'
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-md'
-                : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
+                ? 'bg-white text-blue-900 border-white shadow-md'
+                : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
             }`}
           >
             📉 "What if Income drops?"
@@ -88,8 +94,8 @@ export const WhatIfPage: React.FC = () => {
             onClick={() => setSimType('EXPENSE_REDUCTION')}
             className={`p-3 rounded-xl text-xs font-bold text-left transition border ${
               simType === 'EXPENSE_REDUCTION'
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-md'
-                : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
+                ? 'bg-white text-blue-900 border-white shadow-md'
+                : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
             }`}
           >
             ✂️ "What if I cut Expenses?"
@@ -98,8 +104,8 @@ export const WhatIfPage: React.FC = () => {
             onClick={() => setSimType('INCREASE_SAVINGS')}
             className={`p-3 rounded-xl text-xs font-bold text-left transition border ${
               simType === 'INCREASE_SAVINGS'
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-md'
-                : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700'
+                ? 'bg-white text-blue-900 border-white shadow-md'
+                : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
             }`}
           >
             🌱 "What if I save more?"
@@ -110,18 +116,18 @@ export const WhatIfPage: React.FC = () => {
       {/* Interactive Controls & Simulator Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Interactive Sliders */}
-        <div className="glass-panel p-6 rounded-3xl space-y-5">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-indigo-400" />
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl space-y-5 shadow-xs">
+          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-blue-700" />
             Simulation Parameters
           </h3>
 
           {simType === 'TAKE_LOAN' && (
             <div className="space-y-4">
               <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                   <span>Loan Principal Amount</span>
-                  <span className="text-white font-bold">₹{loanAmount.toLocaleString('en-IN')}</span>
+                  <span className="text-slate-900 font-extrabold">₹{loanAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <input
                   type="range"
@@ -130,14 +136,14 @@ export const WhatIfPage: React.FC = () => {
                   step="25000"
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-700"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                   <span>Interest Rate (Annual)</span>
-                  <span className="text-white font-bold">{interestRate}% p.a.</span>
+                  <span className="text-slate-900 font-extrabold">{interestRate}% p.a.</span>
                 </div>
                 <input
                   type="range"
@@ -146,14 +152,14 @@ export const WhatIfPage: React.FC = () => {
                   step="0.25"
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-700"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+                <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                   <span>Repayment Tenure</span>
-                  <span className="text-white font-bold">{tenureMonths} Months ({Math.round(tenureMonths / 12)} Yrs)</span>
+                  <span className="text-slate-900 font-extrabold">{tenureMonths} Months ({Math.round(tenureMonths / 12)} Yrs)</span>
                 </div>
                 <input
                   type="range"
@@ -162,7 +168,7 @@ export const WhatIfPage: React.FC = () => {
                   step="6"
                   value={tenureMonths}
                   onChange={(e) => setTenureMonths(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-700"
                 />
               </div>
             </div>
@@ -170,9 +176,9 @@ export const WhatIfPage: React.FC = () => {
 
           {simType === 'INCOME_DECREASE' && (
             <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                 <span>Income Change Percentage</span>
-                <span className="text-rose-400 font-bold">{incomeDelta}%</span>
+                <span className="text-rose-700 font-bold">{incomeDelta}%</span>
               </div>
               <input
                 type="range"
@@ -181,16 +187,16 @@ export const WhatIfPage: React.FC = () => {
                 step="5"
                 value={incomeDelta}
                 onChange={(e) => setIncomeDelta(Number(e.target.value))}
-                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-600"
               />
             </div>
           )}
 
           {simType === 'EXPENSE_REDUCTION' && (
             <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                 <span>Monthly Expense Reduction</span>
-                <span className="text-emerald-400 font-bold">₹{expenseCut.toLocaleString('en-IN')}</span>
+                <span className="text-emerald-700 font-bold">₹{expenseCut.toLocaleString('en-IN')}</span>
               </div>
               <input
                 type="range"
@@ -199,16 +205,16 @@ export const WhatIfPage: React.FC = () => {
                 step="500"
                 value={expenseCut}
                 onChange={(e) => setExpenseCut(Number(e.target.value))}
-                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
               />
             </div>
           )}
 
           {simType === 'INCREASE_SAVINGS' && (
             <div>
-              <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-2">
                 <span>Additional Monthly Savings Allocation</span>
-                <span className="text-emerald-400 font-bold">₹{savingsBoost.toLocaleString('en-IN')}</span>
+                <span className="text-emerald-700 font-bold">₹{savingsBoost.toLocaleString('en-IN')}</span>
               </div>
               <input
                 type="range"
@@ -217,13 +223,13 @@ export const WhatIfPage: React.FC = () => {
                 step="1000"
                 value={savingsBoost}
                 onChange={(e) => setSavingsBoost(Number(e.target.value))}
-                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
               />
             </div>
           )}
 
-          <div className="p-3.5 rounded-xl bg-slate-800/60 border border-slate-700 text-xs text-slate-300">
-            <strong>Engine Note:</strong> All financial formulas use exact mathematical amortization equations (EMI = P * r * (1+r)^n / ((1+r)^n - 1)). Zero AI hallucination.
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 font-medium">
+            <strong className="text-slate-900">Deterministic Guarantee:</strong> Calculations execute standard banking amortization formula with zero LLM variance.
           </div>
         </div>
 
@@ -232,63 +238,63 @@ export const WhatIfPage: React.FC = () => {
           {simulation && (
             <>
               {/* Safety Assessment Verdict Banner */}
-              <div className={`p-5 rounded-2xl border flex items-start gap-3.5 ${
+              <div className={`p-5 rounded-2xl border flex items-start gap-3.5 shadow-xs ${
                 simulation.safety_assessment === 'SAFE'
-                  ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
                   : simulation.safety_assessment === 'CAUTION'
-                  ? 'bg-amber-950/40 border-amber-500/40 text-amber-200'
-                  : 'bg-rose-950/40 border-rose-500/40 text-rose-200'
+                  ? 'bg-amber-50 border-amber-300 text-amber-950'
+                  : 'bg-rose-50 border-rose-300 text-rose-950'
               }`}>
                 <div className={`p-2 rounded-xl shrink-0 ${
                   simulation.safety_assessment === 'SAFE'
-                    ? 'bg-emerald-500/20 text-emerald-400'
+                    ? 'bg-emerald-100 text-emerald-800'
                     : simulation.safety_assessment === 'CAUTION'
-                    ? 'bg-amber-500/20 text-amber-400'
-                    : 'bg-rose-500/20 text-rose-400'
+                    ? 'bg-amber-100 text-amber-800'
+                    : 'bg-rose-100 text-rose-800'
                 }`}>
                   {simulation.safety_assessment === 'SAFE' ? <ShieldCheck className="w-6 h-6" /> : <AlertTriangle className="w-6 h-6" />}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-slate-900 border border-slate-700">
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-white border border-slate-200 shadow-xs">
                       Simulation Verdict: {simulation.safety_assessment}
                     </span>
                     {simulation.simulated_metrics.new_emi_amount > 0 && (
-                      <span className="text-xs font-bold text-white">
+                      <span className="text-xs font-bold text-slate-900">
                         New EMI: ₹{simulation.simulated_metrics.new_emi_amount.toLocaleString('en-IN')}/mo
                       </span>
                     )}
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-200 mt-1.5 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-slate-700 mt-1.5 leading-relaxed font-medium">
                     {simulation.ai_guidance}
                   </p>
                 </div>
               </div>
 
               {/* Side-by-Side Metrics Table (Section 14) */}
-              <div className="glass-panel p-5 rounded-2xl space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <div className="bg-white border border-slate-200 p-5 rounded-2xl space-y-3 shadow-xs">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Current State vs Simulated State Projection
                 </h3>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left">
                     <thead>
-                      <tr className="border-b border-slate-800 text-slate-400">
+                      <tr className="border-b border-slate-200 text-slate-500 bg-slate-50/80 font-bold uppercase tracking-wider text-[10px]">
                         <th className="py-2.5 px-3">Metric</th>
                         <th className="py-2.5 px-3">Current State</th>
-                        <th className="py-2.5 px-3 text-indigo-300">Simulated State</th>
+                        <th className="py-2.5 px-3 text-blue-700">Simulated State</th>
                         <th className="py-2.5 px-3">Impact</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800 text-slate-200">
+                    <tbody className="divide-y divide-slate-100 text-slate-800 font-medium">
                       <tr>
-                        <td className="py-2.5 px-3 font-semibold">Monthly Income</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">Monthly Income</td>
                         <td className="py-2.5 px-3">₹{simulation.current_metrics.monthly_income.toLocaleString('en-IN')}</td>
-                        <td className="py-2.5 px-3 font-bold text-white">₹{simulation.simulated_metrics.monthly_income.toLocaleString('en-IN')}</td>
+                        <td className="py-2.5 px-3 font-bold text-blue-900">₹{simulation.simulated_metrics.monthly_income.toLocaleString('en-IN')}</td>
                         <td className="py-2.5 px-3">
                           {simulation.simulated_metrics.monthly_income !== simulation.current_metrics.monthly_income && (
-                            <span className={simulation.simulated_metrics.monthly_income > simulation.current_metrics.monthly_income ? 'text-emerald-400' : 'text-rose-400'}>
+                            <span className={simulation.simulated_metrics.monthly_income > simulation.current_metrics.monthly_income ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
                               {simulation.simulated_metrics.monthly_income > simulation.current_metrics.monthly_income ? '+' : ''}
                               ₹{(simulation.simulated_metrics.monthly_income - simulation.current_metrics.monthly_income).toLocaleString('en-IN')}
                             </span>
@@ -296,46 +302,46 @@ export const WhatIfPage: React.FC = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 font-semibold">Total EMI Obligations</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">Total EMI Obligations</td>
                         <td className="py-2.5 px-3">₹{simulation.current_metrics.monthly_emi.toLocaleString('en-IN')}</td>
-                        <td className="py-2.5 px-3 font-bold text-amber-400">₹{simulation.simulated_metrics.monthly_emi.toLocaleString('en-IN')}</td>
-                        <td className="py-2.5 px-3 text-amber-400">
+                        <td className="py-2.5 px-3 font-bold text-amber-800">₹{simulation.simulated_metrics.monthly_emi.toLocaleString('en-IN')}</td>
+                        <td className="py-2.5 px-3 text-amber-800 font-bold">
                           {simulation.simulated_metrics.monthly_emi > simulation.current_metrics.monthly_emi
                             ? `+₹${(simulation.simulated_metrics.monthly_emi - simulation.current_metrics.monthly_emi).toLocaleString('en-IN')}/mo`
                             : '-'}
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 font-semibold">Debt Burden (% of Income)</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">Debt Burden (% of Income)</td>
                         <td className="py-2.5 px-3">{simulation.current_metrics.debt_burden_percent}%</td>
-                        <td className={`py-2.5 px-3 font-bold ${simulation.simulated_metrics.debt_burden_percent > 40 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                        <td className={`py-2.5 px-3 font-bold ${simulation.simulated_metrics.debt_burden_percent > 40 ? 'text-rose-700' : 'text-emerald-700'}`}>
                           {simulation.simulated_metrics.debt_burden_percent}%
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className={simulation.simulated_metrics.debt_burden_percent > 40 ? 'text-rose-400' : 'text-slate-400'}>
+                          <span className={simulation.simulated_metrics.debt_burden_percent > 40 ? 'text-rose-700 font-bold' : 'text-slate-500'}>
                             {simulation.simulated_metrics.debt_burden_percent > 40 ? '⚠️ High Burden' : '✓ Safe Limit'}
                           </span>
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 font-semibold">Monthly Net Surplus</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">Monthly Net Surplus</td>
                         <td className="py-2.5 px-3">₹{simulation.current_metrics.monthly_surplus.toLocaleString('en-IN')}</td>
-                        <td className={`py-2.5 px-3 font-bold ${simulation.simulated_metrics.monthly_surplus < 3000 ? 'text-rose-400' : 'text-emerald-400'}`}>
+                        <td className={`py-2.5 px-3 font-bold ${simulation.simulated_metrics.monthly_surplus < 3000 ? 'text-rose-700' : 'text-emerald-700'}`}>
                           ₹{simulation.simulated_metrics.monthly_surplus.toLocaleString('en-IN')}
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className={simulation.simulated_metrics.monthly_surplus >= simulation.current_metrics.monthly_surplus ? 'text-emerald-400' : 'text-rose-400'}>
+                          <span className={simulation.simulated_metrics.monthly_surplus >= simulation.current_metrics.monthly_surplus ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
                             {simulation.simulated_metrics.monthly_surplus - simulation.current_metrics.monthly_surplus >= 0 ? '+' : ''}
                             ₹{(simulation.simulated_metrics.monthly_surplus - simulation.current_metrics.monthly_surplus).toLocaleString('en-IN')}
                           </span>
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 px-3 font-semibold">Financial Health Score</td>
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">Financial Health Score</td>
                         <td className="py-2.5 px-3">{simulation.current_metrics.financial_health_score}/100</td>
-                        <td className="py-2.5 px-3 font-bold text-cyan-300">{simulation.simulated_metrics.financial_health_score}/100</td>
+                        <td className="py-2.5 px-3 font-bold text-blue-700">{simulation.simulated_metrics.financial_health_score}/100</td>
                         <td className="py-2.5 px-3">
-                          <span className={simulation.simulated_metrics.financial_health_score >= simulation.current_metrics.financial_health_score ? 'text-emerald-400' : 'text-rose-400'}>
+                          <span className={simulation.simulated_metrics.financial_health_score >= simulation.current_metrics.financial_health_score ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}>
                             {simulation.simulated_metrics.financial_health_score - simulation.current_metrics.financial_health_score >= 0 ? '+' : ''}
                             {simulation.simulated_metrics.financial_health_score - simulation.current_metrics.financial_health_score} pts
                           </span>

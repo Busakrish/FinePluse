@@ -16,22 +16,22 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-8 py-3.5 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-8 py-3 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
       {/* Brand / Logo */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-emerald-400 shadow-lg shadow-indigo-500/25">
-          <span className="text-xl font-black tracking-wider text-white">FP</span>
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-emerald-600 shadow-md shadow-blue-700/20 text-white">
+          <span className="text-xl font-black tracking-wider">FP</span>
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
-              FINPULSE <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">AI</span>
+            <h1 className="text-base font-black tracking-tight text-slate-900 flex items-center gap-1.5">
+              FINPULSE <span className="text-blue-700">AI</span>
             </h1>
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-              BHARAT
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              BHARAT BANKING
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 hidden sm:block">
+          <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
             {t('brand_tagline')}
           </p>
         </div>
@@ -43,16 +43,16 @@ export const Header: React.FC = () => {
         <ScenarioSwitcher />
 
         {/* Vernacular Language Switcher */}
-        <div className="flex items-center bg-slate-800/90 rounded-xl border border-slate-700 p-1">
-          <Languages className="w-3.5 h-3.5 text-indigo-400 ml-1.5 mr-1 hidden sm:inline" />
+        <div className="flex items-center bg-slate-100 rounded-xl border border-slate-200 p-1">
+          <Languages className="w-3.5 h-3.5 text-blue-600 ml-1.5 mr-1 hidden sm:inline" />
           {langOptions.map((l) => (
             <button
               key={l.code}
               onClick={() => setLanguage(l.code)}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
                 language === l.code
-                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-blue-700 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {l.label}
@@ -61,13 +61,13 @@ export const Header: React.FC = () => {
         </div>
 
         {/* User Pill */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
-          <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-xs border border-indigo-500/30">
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200">
+          <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs border border-blue-200">
             {user?.name?.charAt(0) || 'U'}
           </div>
           <div className="text-left">
-            <div className="text-xs font-bold text-white max-w-[120px] truncate">{user?.name || 'User'}</div>
-            <div className="text-[10px] text-slate-400">{user?.role === 'ADMIN' ? 'Compliance Admin' : 'Verified Bharat KYC'}</div>
+            <div className="text-xs font-bold text-slate-900 max-w-[120px] truncate">{user?.name || 'User'}</div>
+            <div className="text-[10px] text-slate-500 font-medium">{user?.role === 'ADMIN' ? 'Compliance Admin' : 'Verified Bharat KYC'}</div>
           </div>
         </div>
       </div>

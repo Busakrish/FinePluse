@@ -46,10 +46,10 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900/90 border-r border-slate-800 flex flex-col justify-between p-4 shrink-0 min-h-[calc(100vh-65px)]">
+    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0 min-h-[calc(100vh-65px)] shadow-xs">
       <div className="space-y-6">
         <div>
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+          <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
             Banking Experience
           </div>
           <nav className="space-y-1">
@@ -62,12 +62,12 @@ export const Sidebar: React.FC = () => {
                   className={({ isActive }) =>
                     `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-indigo-600/30 to-indigo-500/10 text-indigo-300 border border-indigo-500/40 shadow-sm'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-xs font-bold'
                         : item.highlight
-                        ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30 animate-pulse'
+                        ? 'bg-amber-50 text-amber-800 border border-amber-300 font-bold animate-pulse'
                         : item.alert
-                        ? 'bg-rose-500/10 text-rose-300 border border-rose-500/30'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                        ? 'bg-rose-50 text-rose-800 border border-rose-300 font-bold'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`
                   }
                 >
@@ -76,7 +76,7 @@ export const Sidebar: React.FC = () => {
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-800 text-slate-400 border border-slate-700 shrink-0">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
                       {item.badge}
                     </span>
                   )}
@@ -88,7 +88,7 @@ export const Sidebar: React.FC = () => {
 
         {/* Admin & Compliance Section */}
         <div>
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+          <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
             Responsible AI & Compliance
           </div>
           <nav className="space-y-1">
@@ -101,17 +101,17 @@ export const Sidebar: React.FC = () => {
                   className={({ isActive }) =>
                     `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                       isActive
-                        ? 'bg-gradient-to-r from-purple-600/30 to-purple-500/10 text-purple-300 border border-purple-500/40'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                        ? 'bg-purple-50 text-purple-700 border border-purple-200 font-bold shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`
                   }
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <Icon className="w-4 h-4 shrink-0 text-purple-400" />
+                    <Icon className="w-4 h-4 shrink-0 text-purple-600" />
                     <span className="truncate">{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-purple-900/30 text-purple-300 border border-purple-700/40 shrink-0">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-purple-50 text-purple-700 border border-purple-200 shrink-0">
                       {item.badge}
                     </span>
                   )}
@@ -123,9 +123,12 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Footer Info */}
-      <div className="p-3 rounded-xl bg-slate-800/40 border border-slate-800 text-[10px] text-slate-400 mt-6">
-        <div className="font-bold text-slate-300">FinPulse AI Core</div>
-        <div>DPDPA 2023 & RBI Fair Lending Safeguards Enabled</div>
+      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[10px] text-slate-500 mt-6 space-y-1">
+        <div className="flex items-center gap-1.5 font-bold text-slate-700">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          FinPulse Bank-Grade Core
+        </div>
+        <div className="leading-tight">DPDPA 2023 & RBI Fair Lending Safeguards Certified</div>
       </div>
     </aside>
   );

@@ -15,9 +15,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'Healthy / Disciplined Saver',
       desc: 'High savings (41%), stable salary, receives Gold SIP investment recommendation.',
       icon: Sparkles,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
-      border: 'border-emerald-500/30',
+      color: 'text-emerald-700',
+      bg: 'bg-emerald-50',
+      border: 'border-emerald-200',
     },
     {
       id: 'MODERATE',
@@ -25,9 +25,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'Moderate / Growing Buffer',
       desc: 'Moderate savings (18%), steady cashflow, liquid emergency fund recommended.',
       icon: ShieldCheck,
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10',
-      border: 'border-blue-500/30',
+      color: 'text-blue-700',
+      bg: 'bg-blue-50',
+      border: 'border-blue-200',
     },
     {
       id: 'STRESS',
@@ -35,9 +35,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: "HIGH STRESS / Don't Sell Me Mode",
       desc: 'Savings drop -45%, high EMI (60%), missed payment. Loan cross-sell BLOCKED; Samadhan relief offered.',
       icon: AlertTriangle,
-      color: 'text-amber-400',
-      bg: 'bg-amber-500/10',
-      border: 'border-amber-500/30',
+      color: 'text-amber-800',
+      bg: 'bg-amber-50',
+      border: 'border-amber-300',
     },
     {
       id: 'FRAUD',
@@ -45,9 +45,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'Fraud & Anomaly Trigger',
       desc: 'Sudden ₹85,000 transaction at 02:45 AM triggers statistical anomaly flag (z-score: 4.8).',
       icon: Shield,
-      color: 'text-rose-400',
-      bg: 'bg-rose-500/10',
-      border: 'border-rose-500/30',
+      color: 'text-rose-700',
+      bg: 'bg-rose-50',
+      border: 'border-rose-200',
     },
     {
       id: 'VERNACULAR',
@@ -55,9 +55,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'Vernacular Rural / Dairy Farmer',
       desc: 'Native Gujarati speaker from Anand. Converses with AI in Gujarati about Kisan credit & crop savings.',
       icon: Languages,
-      color: 'text-cyan-400',
-      bg: 'bg-cyan-500/10',
-      border: 'border-cyan-500/30',
+      color: 'text-cyan-800',
+      bg: 'bg-cyan-50',
+      border: 'border-cyan-200',
     },
     {
       id: 'WHATIF',
@@ -65,9 +65,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'What-If Loan Simulator',
       desc: 'Steady teacher salary evaluating ₹5 Lakh home renovation loan impact on monthly surplus.',
       icon: Sliders,
-      color: 'text-indigo-400',
-      bg: 'bg-indigo-500/10',
-      border: 'border-indigo-500/30',
+      color: 'text-indigo-700',
+      bg: 'bg-indigo-50',
+      border: 'border-indigo-200',
     },
     {
       id: 'ADMIN',
@@ -75,9 +75,9 @@ export const ScenarioSwitcher: React.FC = () => {
       tag: 'Chief Risk & AI Compliance Officer',
       desc: 'Live AI Decision Stream, policy intercept monitor & regulatory audit logs.',
       icon: Users,
-      color: 'text-purple-400',
-      bg: 'bg-purple-500/10',
-      border: 'border-purple-500/30',
+      color: 'text-purple-700',
+      bg: 'bg-purple-50',
+      border: 'border-purple-200',
     },
   ];
 
@@ -96,24 +96,24 @@ export const ScenarioSwitcher: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={loading}
-        className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 shadow-lg text-xs font-semibold text-slate-200 transition-all hover:border-indigo-500/50"
+        className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-300 shadow-xs text-xs font-semibold text-slate-700 transition-all hover:border-blue-400"
       >
         <span className="flex h-2 w-2 relative">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
         </span>
-        <span className="text-slate-400 hidden sm:inline">Scenario:</span>
-        <span className="font-bold text-white max-w-[160px] truncate">{currentScenario.name}</span>
-        <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+        <span className="text-slate-500 hidden sm:inline">Scenario:</span>
+        <span className="font-bold text-slate-900 max-w-[160px] truncate">{currentScenario.name}</span>
+        <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
       </button>
 
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-slate-900/95 border border-slate-700 shadow-2xl p-2 z-50 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-150">
-            <div className="px-3 py-2 border-b border-slate-800 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Demo Judge Persona Selector</span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold border border-indigo-500/30">1-Click Live Switch</span>
+          <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white border border-slate-200 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Demo Judge Persona Selector</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">1-Click Live Switch</span>
             </div>
 
             <div className="mt-1 space-y-1 max-h-[75vh] overflow-y-auto pr-1">
@@ -127,8 +127,8 @@ export const ScenarioSwitcher: React.FC = () => {
                     onClick={() => handleSelect(s.id)}
                     className={`w-full text-left p-3 rounded-xl transition flex items-start gap-3 border ${
                       isSelected
-                        ? 'bg-slate-800 border-indigo-500/50 shadow-md'
-                        : 'hover:bg-slate-800/60 border-transparent'
+                        ? 'bg-blue-50/80 border-blue-300 shadow-xs'
+                        : 'hover:bg-slate-50 border-transparent'
                     }`}
                   >
                     <div className={`p-2 rounded-lg ${s.bg} ${s.color} border ${s.border} shrink-0 mt-0.5`}>
@@ -136,11 +136,11 @@ export const ScenarioSwitcher: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <div className="text-xs font-bold text-white truncate">{s.name}</div>
-                        {isSelected && <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-1" />}
+                        <div className="text-xs font-bold text-slate-900 truncate">{s.name}</div>
+                        {isSelected && <Check className="w-4 h-4 text-emerald-600 shrink-0 ml-1" />}
                       </div>
                       <div className={`text-[11px] font-semibold ${s.color} mt-0.5`}>{s.tag}</div>
-                      <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-tight">{s.desc}</p>
+                      <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-tight">{s.desc}</p>
                     </div>
                   </button>
                 );
