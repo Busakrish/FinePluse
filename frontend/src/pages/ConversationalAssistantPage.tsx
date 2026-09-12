@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   BotMessageSquare,
   Send,
@@ -15,10 +15,14 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronUp,
-  ShieldAlert,
   ArrowRight,
-  HelpCircle,
   Banknote,
+  Lightbulb,
+  Calendar,
+  Zap,
+  Compass,
+  Sun,
+  Award,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -31,82 +35,112 @@ interface Message {
   language?: string;
   intent?: string;
   verified_data?: any;
+  proactive_insight?: string;
+  coaching_advice?: {
+    why_this_advice: string;
+    expected_benefit: string;
+  };
   suggested_actions?: string[];
   deep_link?: string;
   model_used?: string;
   timestamp?: string;
 }
 
+interface DailyBrief {
+  greeting: string;
+  customer_name: string;
+  health_score: number;
+  health_tier: string;
+  highlights: string[];
+  today_suggestion: string;
+  quick_actions: string[];
+  deep_link?: string;
+}
+
 export const ConversationalAssistantPage: React.FC = () => {
   const { user } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dailyBrief, setDailyBrief] = useState<DailyBrief | null>(null);
+  const [briefCollapsed, setBriefCollapsed] = useState(false);
   const [expandedFacts, setExpandedFacts] = useState<Record<string, boolean>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const processedPromptRef = useRef<string | null>(null);
 
-  // Initial welcome greeting
-  const getWelcomeMessage = (lang: string): Message => {
+  // Personalized Welcome Generator (Feature 9)
+  const getPersonalizedWelcome = (brief?: DailyBrief | null): Message => {
     const firstName = user?.name ? user.name.split(' ')[0] : 'there';
-    if (lang === 'gu') {
+    const score = brief?.health_score || 82;
+    const tier = brief?.health_tier || 'GOOD';
+
+    if (language === 'gu') {
       return {
         id: 'init_welcome',
         sender: 'ASSISTANT',
-        content: `નમસ્તે ${firstName}! હું તમારો FinPulse AI બેંકિંગ મિત્ર છું.
-
-હું તમારા બેંક ખાતા, સક્રિય EMI, તાજેતરના વ્યવહારો, બચત યોજનાઓ અને UPI સંબંધિત પ્રશ્નોના ઉત્તર આપી શકું છું. તમે સીધા ગુજરાતી અથવા Gujlish માં પૂછી શકો છો!`,
-        suggested_actions: [
+        content: `નમસ્તે ${firstName}ભાઈ 🌞\n\nતમારો નાણાકીય હેલ્થ સ્કોર: **${score}/100** (${tier})\n${brief?.today_suggestion || 'હું તમારા ખાતા બેલેન્સ, આગામી EMI, ખર્ચ વિશ્લેષણ અને બચત યોજનાઓ માટે તૈયાર છું.'}`,
+        suggested_actions: brief?.quick_actions || [
           'મારું ખાતા બેલેન્સ કેટલું છે?',
           'મારી આગામી EMI તારીખ કઈ છે?',
-          'નાણાકીય સ્વાસ્થ્ય સ્કોર સમજાવો',
-          'બચત વધારવા માટે શ્રેષ્ઠ યોજના કઈ?',
+          'આ અઠવાડિયે સૌથી વધુ ખર્ચ ક્યાં થયો?',
+          'શ્રેષ્ઠ રોકાણ યોજના બતાવો',
         ],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
     }
-    if (lang === 'hi') {
+
+    if (language === 'hi') {
       return {
         id: 'init_welcome',
         sender: 'ASSISTANT',
-        content: `नमस्ते ${firstName} जी! मैं आपका FinPulse AI बैंकिंग सहायक हूँ।
-
-मैं आपके बैंक बैलेंस, सक्रिय लोन EMI, हालिया लेन-देन, वित्तीय स्वास्थ्य और UPI समस्याओं से जुड़े सभी सवालों के सटीक उत्तर दे सकता हूँ। आप हिंदी या Hinglish में बेझिझक पूछ सकते हैं!`,
-        suggested_actions: [
+        content: `नमस्ते ${firstName} जी 🌞\n\nआपका वित्तीय स्वास्थ्य स्कोर: **${score}/100** (${tier})\n${brief?.today_suggestion || 'मैं आपके बैंक बैलेंस, आगामी किश्तों, मासिक खर्च और बचत कोचिंग के लिए तैयार हूँ।'}\n\nआज आप क्या जानना चाहते हैं?`,
+        suggested_actions: brief?.quick_actions || [
           'मेरा वर्तमान बैलेंस कितना है?',
-          'मेरी कुल मासिक EMI कितनी है?',
-          'फाइनेंशियल हेल्थ स्कोर कैसे सुधारें?',
-          'क्या मुझे नया लोन लेना चाहिए?',
+          'मेरी आगामी किश्त कब देय है?',
+          'सर्वाधिक खर्च किस श्रेणी में हुआ?',
+          'मेरे लिए सर्वश्रेष्ठ बचत योजना क्या है?',
         ],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
     }
+
     return {
       id: 'init_welcome',
       sender: 'ASSISTANT',
-      content: `Namaste ${firstName}! I am your FinPulse AI banking assistant for Bharat.
-
-I am securely grounded with your verified core banking records, active loans, spending history, and Financial Twin. Ask me anything naturally in English, Hindi, or Gujarati!`,
-      suggested_actions: [
+      content: `Namaste ${firstName} 🌞\n\nFinancial Health Score: **${score}/100** (${tier})\n${brief?.today_suggestion || 'Great job managing your accounts! How can I assist with your finances today?'}\n\nAsk me anything about your balance, upcoming bills, spending breakdown, or smart savings opportunities.`,
+      suggested_actions: brief?.quick_actions || [
         'What is my available balance?',
         'When is my next EMI due?',
-        'Why is my financial health score low?',
-        'Suggest the best investment for me',
+        'Where did I spend the most this week?',
+        'Suggest best investment for me',
       ],
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
   };
 
-  // Load conversation history on mount
+  // Load Daily AI Banking Brief (Feature 1) & Conversation History (Feature 8)
   useEffect(() => {
-    const loadChatHistory = async () => {
+    const initializeChatbot = async () => {
+      let loadedBrief: DailyBrief | null = null;
       try {
-        const res = await api.get('/chat/history');
-        if (res.data?.success && Array.isArray(res.data.history) && res.data.history.length > 0) {
-          const loaded: Message[] = res.data.history.map((m: any) => ({
+        const briefRes = await api.get('/chat/brief', { params: { lang: language } });
+        if (briefRes.data?.success && briefRes.data.brief) {
+          loadedBrief = briefRes.data.brief;
+          setDailyBrief(loadedBrief);
+        }
+      } catch (err) {
+        console.warn('Could not load daily brief:', err);
+      }
+
+      try {
+        const historyRes = await api.get('/chat/history');
+        if (historyRes.data?.success && Array.isArray(historyRes.data.history) && historyRes.data.history.length > 0) {
+          const loaded: Message[] = historyRes.data.history.map((m: any) => ({
             id: m.id,
             sender: m.sender,
             content: m.content,
@@ -119,15 +153,15 @@ I am securely grounded with your verified core banking records, active loans, sp
           }));
           setMessages(loaded);
         } else {
-          setMessages([getWelcomeMessage(language)]);
+          setMessages([getPersonalizedWelcome(loadedBrief)]);
         }
       } catch (err) {
-        setMessages([getWelcomeMessage(language)]);
+        setMessages([getPersonalizedWelcome(loadedBrief)]);
       }
     };
 
-    loadChatHistory();
-  }, []);
+    initializeChatbot();
+  }, [language]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -171,6 +205,8 @@ I am securely grounded with your verified core banking records, active loans, sp
           language: botData.language,
           intent: botData.intent,
           verified_data: botData.verified_data,
+          proactive_insight: botData.proactive_insight,
+          coaching_advice: botData.coaching_advice,
           suggested_actions: botData.suggested_actions,
           deep_link: botData.deep_link,
           model_used: botData.model_used,
@@ -202,94 +238,143 @@ I am securely grounded with your verified core banking records, active loans, sp
     }
   };
 
+  // Handle incoming navigation prompt from LifeEventPredictionWidget or other deep-links
+  useEffect(() => {
+    const prompt = (location.state as any)?.prompt;
+    if (prompt && processedPromptRef.current !== prompt) {
+      processedPromptRef.current = prompt;
+      const timer = setTimeout(() => {
+        handleSendMessage(prompt);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
+
   const handleClearChat = () => {
-    setMessages([getWelcomeMessage(language)]);
+    setMessages([getPersonalizedWelcome(dailyBrief)]);
   };
 
-  // Categorized natural banking prompts
-  const promptCategories = [
-    {
-      icon: Banknote,
-      title: 'Accounts & Balance',
-      prompts: [
-        { label: 'Check Balance', query: 'What is my current available balance?' },
-        { label: 'Recent Transactions', query: 'Show my last 5 debit and credit transactions.' },
-      ],
-    },
-    {
-      icon: CreditCard,
-      title: 'Loans & EMI',
-      prompts: [
-        { label: 'Active EMIs', query: 'When is my next EMI due and what is the total monthly amount?' },
-        { label: 'Can I take a Loan?', query: 'Can I afford a 2 Lakh personal or bike loan?' },
-      ],
-    },
-    {
-      icon: TrendingUp,
-      title: 'Financial Health & SIP',
-      prompts: [
-        { label: 'Financial Score', query: 'Why is my financial health score at this level?' },
-        { label: 'Best Investment', query: 'Suggest the best savings or SIP plan based on my surplus cash.' },
-      ],
-    },
-    {
-      icon: AlertTriangle,
-      title: 'Safety, UPI & Relief',
-      prompts: [
-        { label: 'UPI Payment Failed', query: 'My UPI transaction failed and amount was deducted. What should I do?' },
-        { label: 'Need EMI Relief', query: "I'm having trouble paying my EMI this month. What relief is available?" },
-      ],
-    },
-  ];
-
-  const vernacularQuickPills = [
-    { label: '🇬🇧 "What is my active EMI?"', query: 'What is my active EMI?' },
-    { label: '🇮🇳 "Mera balance kitna hai?"', query: 'Mera balance kitna hai?' },
-    { label: '🇮🇳 "Maru balance ketlu che?"', query: 'Maru balance ketlu che?' },
-    { label: '🇮🇳 "Mujhe loan ki jankari chahiye."', query: 'Mujhe loan ki jankari chahiye.' },
-    { label: '🇮🇳 "Mare loan ni details joi che."', query: 'Mare loan ni details joi che.' },
+  // Quick Action Exploration Pills
+  const quickFeaturePills = [
+    { label: '🎯 Upcoming Life Events', query: 'What life events have you detected for me and what should I prepare for next?' },
+    { label: '🏡 Home Loan Readiness', query: 'Am I eligible for a home loan soon based on my rent and savings?' },
+    { label: '🛡️ Why Insurance?', query: 'Why are you recommending insurance or emergency medical protection for me?' },
+    { label: '📊 Weekly Spending Report', query: 'Where did I spend the most this week? Give me my spending summary.' },
+    { label: '📅 Upcoming Payments Timeline', query: 'What are my upcoming payments, bills, and expected salary this month?' },
+    { label: '💡 AI Financial Coaching', query: 'How can I improve my financial health and save more money?' },
+    { label: '🚀 Opportunity Detector', query: 'What investment or savings opportunities are recommended for my profile?' },
+    { label: '🇮🇳 "Mera EMI kitna hai?"', query: 'Mera EMI kitna hai aur kab due hai?' },
+    { label: '🇮🇳 "Maru balance ketlu che?"', query: 'Maru account balance ketlu che?' },
   ];
 
   return (
     <div className="max-w-4xl mx-auto space-y-3 h-[calc(100vh-115px)] flex flex-col animate-in fade-in duration-200">
-      {/* Top Banner: Real-time Gemini 2.5 Flash + Verified Grounding Pipeline */}
-      <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-50 via-indigo-50 to-emerald-50 border border-blue-200 shadow-xs">
+      {/* Top Header Banner */}
+      <div className="flex items-center justify-between px-4 py-2.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-blue-700 text-white flex items-center justify-center shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-700 to-indigo-800 text-white flex items-center justify-center shadow-xs">
             <BotMessageSquare className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900 text-xs sm:text-sm">FinPulse AI Conversational Assistant</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                Gemini 2.5 Flash
+              <span className="font-bold text-slate-900 text-xs sm:text-sm">FinPulse AI Banking Copilot</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                Zero Hallucination
               </span>
             </div>
-            <p className="text-[11px] text-slate-600 hidden sm:block">
-              Multilingual NLU grounded in verified core accounts, loans, Financial Twin & RBI Fair Lending policies.
+            <p className="text-[11px] text-slate-500 hidden sm:block">
+              Connected with Financial Twin, Verified Core Accounts, Loans, & Anti-Predatory Safety Gateway.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
+          {dailyBrief && (
+            <button
+              onClick={() => setBriefCollapsed(!briefCollapsed)}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition"
+            >
+              <Sun className="w-3.5 h-3.5 text-amber-500" />
+              <span>Daily Brief</span>
+              {briefCollapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+            </button>
+          )}
+
           <button
             onClick={handleClearChat}
             title="Reset conversation"
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 border border-slate-200 transition"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Reset</span>
+            <RefreshCw className="w-3 h-3" />
+            <span className="hidden sm:inline">Reset</span>
           </button>
         </div>
       </div>
 
-      {/* Suggested Quick Vernacular Pills */}
+      {/* Feature 1: Daily AI Banking Brief Card (Customer Only) */}
+      {dailyBrief && !briefCollapsed && (
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-br from-blue-50/90 via-indigo-50/60 to-emerald-50/50 border border-blue-200/90 shadow-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-2xs text-xs">
+                <Sun className="w-3.5 h-3.5 text-amber-300" />
+              </span>
+              <span className="font-bold text-xs sm:text-sm text-slate-900">{dailyBrief.greeting}</span>
+              <span className="text-[11px] text-slate-500">• Today's AI Banking Brief</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-blue-800 border border-blue-200 shadow-2xs flex items-center gap-1">
+                <Award className="w-3 h-3 text-amber-500" />
+                Health: {dailyBrief.health_score}/100 ({dailyBrief.health_tier})
+              </span>
+              <button
+                onClick={() => setBriefCollapsed(true)}
+                className="text-slate-400 hover:text-slate-600 text-xs px-1"
+                title="Minimize brief"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700 font-medium">
+            {dailyBrief.highlights.map((bullet, idx) => (
+              <div key={idx} className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-blue-100/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0" />
+                <span className="leading-snug">{bullet}</span>
+              </div>
+            ))}
+          </div>
+
+          {dailyBrief.today_suggestion && (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 text-xs bg-white/90 p-2.5 rounded-xl border border-blue-100">
+              <div className="flex items-center gap-2 text-blue-900 font-medium">
+                <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span>{dailyBrief.today_suggestion}</span>
+              </div>
+              {dailyBrief.deep_link && (
+                <button
+                  onClick={() => navigate(dailyBrief.deep_link!)}
+                  className="px-3 py-1 rounded-lg text-xs font-bold bg-blue-700 hover:bg-blue-800 text-white shrink-0 shadow-2xs flex items-center gap-1 transition"
+                >
+                  <span>Explore Plan</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Suggested Quick Exploration Pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <span className="text-[11px] font-bold text-slate-500 shrink-0 flex items-center gap-1 pl-1">
-          <Languages className="w-3.5 h-3.5 text-blue-600" />
-          Try:
+          <Compass className="w-3.5 h-3.5 text-blue-600" />
+          Ask:
         </span>
-        {vernacularQuickPills.map((pill, idx) => (
+        {quickFeaturePills.map((pill, idx) => (
           <button
             key={idx}
             onClick={() => handleSendMessage(pill.query)}
@@ -301,7 +386,7 @@ I am securely grounded with your verified core banking records, active loans, sp
         ))}
       </div>
 
-      {/* Chat Messages Area */}
+      {/* Chat Messages Container */}
       <div className="flex-1 bg-white border border-slate-200 p-4 sm:p-6 rounded-3xl overflow-y-auto space-y-4 shadow-xs">
         {messages.map((m) => {
           const isUser = m.sender === 'USER';
@@ -329,6 +414,35 @@ I am securely grounded with your verified core banking records, active loans, sp
                   }`}
                 >
                   <p className="whitespace-pre-line leading-relaxed">{m.content}</p>
+
+                  {/* Feature 2: Smart Proactive Insight Badge */}
+                  {!isUser && m.proactive_insight && (
+                    <div className="mt-3 p-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-indigo-50 border border-amber-200/80 text-xs text-slate-800 space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-[11px]">
+                        <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>Smart Proactive Insight</span>
+                      </div>
+                      <p className="text-[11px] text-slate-700 leading-normal pl-5">{m.proactive_insight}</p>
+                    </div>
+                  )}
+
+                  {/* Feature 3: AI Financial Coach Advice Card */}
+                  {!isUser && m.coaching_advice && (
+                    <div className="mt-3 p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 text-xs space-y-1 text-slate-800">
+                      <div className="flex items-center gap-1.5 font-bold text-blue-900 text-[11px]">
+                        <TrendingUp className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                        <span>AI Financial Coach Analysis</span>
+                      </div>
+                      <div className="pl-5 space-y-1 text-[11px]">
+                        <p>
+                          <strong className="text-slate-900">Why this advice:</strong> {m.coaching_advice.why_this_advice}
+                        </p>
+                        <p>
+                          <strong className="text-emerald-700">Expected benefit:</strong> {m.coaching_advice.expected_benefit}
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Metadata footer */}
                   <div
@@ -396,7 +510,7 @@ I am securely grounded with your verified core banking records, active loans, sp
                   </div>
                 )}
 
-                {/* Suggested Action Buttons */}
+                {/* Feature 7: Dynamic Follow-Up Suggestions */}
                 {!isUser && m.suggested_actions && m.suggested_actions.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {m.suggested_actions.map((action, aIdx) => (
@@ -446,7 +560,7 @@ I am securely grounded with your verified core banking records, active loans, sp
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Box */}
+      {/* Input Form */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -463,10 +577,10 @@ I am securely grounded with your verified core banking records, active loans, sp
             disabled={loading}
             placeholder={
               language === 'gu'
-                ? 'ગુજરાતીમાં લખો (જેમ કે: "મારી લોન EMI કેટલી છે?", "બેલેન્સ બતાવો")...'
+                ? 'ગુજરાતીમાં લખો (જેમ કે: "ખર્ચ રિપોર્ટ બતાવો", "આગામી EMI ક્યારે છે?")...'
                 : language === 'hi'
-                ? 'यहाँ पूछें (जैसे: "मेरा EMI कितना है?", "बैलेंस बताओ", "क्या मैं लोन ले सकता हूँ?")...'
-                : 'Ask naturally (e.g. "What is my balance?", "Can I take a bike loan?", "Show loans")...'
+                ? 'यहाँ पूछें (जैसे: "साप्ताहिक खर्च कहाँ हुआ?", "आगामी किश्तें दिखाओ", "बचत कैसे बढ़ाएं?")...'
+                : 'Ask naturally (e.g. "Where did I spend the most?", "Upcoming payments", "How to save more?")...'
             }
             className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-300 text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-blue-600 shadow-xs font-medium pr-10 disabled:bg-slate-50"
           />

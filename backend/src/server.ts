@@ -14,6 +14,7 @@ import whatifRoutes from './routes/whatif.routes.js';
 import loanRoutes from './routes/loan.routes.js';
 import consentRoutes from './routes/consent.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import lifeEventsRoutes from './routes/lifeEvents.routes.js';
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/what-if', whatifRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/consents', consentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/life-events', lifeEventsRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -162,3 +162,42 @@ export interface AuditLog {
   final_action_taken: string;
   timestamp: string;
 }
+
+export type LifeEventCategory =
+  | 'CAREER'
+  | 'HOUSING'
+  | 'FAMILY'
+  | 'EDUCATION'
+  | 'HEALTH'
+  | 'VEHICLE'
+  | 'TRAVEL'
+  | 'STRESS_RELIEF';
+
+export interface LifeEventPrediction {
+  id: string;
+  event_type: string;
+  category: LifeEventCategory;
+  title: string;
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW';
+  confidence_score: number;
+  detected_signals: string[];
+  why_detected: string;
+  recommendation: {
+    title: string;
+    product_type: string;
+    description: string;
+    benefit: string;
+  };
+  action: {
+    label: string;
+    route: string;
+    query_prompt: string;
+  };
+}
+
+export interface LifeEventPredictionResponse {
+  customer_id: string;
+  consent_restricted: boolean;
+  predictions: LifeEventPrediction[];
+  generated_at: string;
+}

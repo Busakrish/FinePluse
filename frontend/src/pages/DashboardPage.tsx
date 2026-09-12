@@ -33,6 +33,7 @@ import { FinancialTwin, Recommendation, NextBestAction, AIInsight, Transaction, 
 import { GuardianPill } from '../components/GuardianPill';
 import { DontSellMeBanner } from '../components/DontSellMeBanner';
 import { ExplainModal } from '../components/ExplainModal';
+import { LifeEventPredictionWidget } from '../components/LifeEventPredictionWidget';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -257,6 +258,9 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Upcoming Financial Life Events - Proactive Milestone Intelligence */}
+      <LifeEventPredictionWidget />
 
       {/* Two Column Layout: Recommendations & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

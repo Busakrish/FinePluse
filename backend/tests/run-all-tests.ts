@@ -9,6 +9,7 @@ import { WhatIfEngine } from '../src/engines/whatif.js';
 import { SafetyPolicyGateway } from '../src/safety/gateway.js';
 import { NextBestActionEngine } from '../src/safety/nextBestAction.js';
 import { FinancialTwinManager } from '../src/twin/twinManager.js';
+import { LifeEventPredictionService } from '../src/services/lifeEventPrediction.service.js';
 
 let passedCount = 0;
 let failedCount = 0;
@@ -151,6 +152,53 @@ async function runAcceptanceTests() {
     'TEST 8: Native Gujarati query accurately maps intent and returns localized response with verified data',
     `Intent: ${gujaratiQuery.intent}, Language: ${gujaratiQuery.language}`
   );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 9: Life Event Prediction Milestone Detection
+  // ----------------------------------------------------
+  const rahulEvents = LifeEventPredictionService.predictForCustomer('cust_rahul');
+  const hasCareerOrVehicle = rahulEvents.predictions.some(
+    (p) => p.category === 'CAREER' || p.category === 'VEHICLE'
+  );
+  assert(
+    !rahulEvents.consent_restricted && rahulEvents.predictions.length > 0 && hasCareerOrVehicle,
+    'TEST 9: Life Event Prediction AI detects verified milestones (Career / Vehicle) with confidence scores',
+    `Found ${rahulEvents.predictions.length} milestones for Rahul.`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 10: Anti-Predatory Financial Stress Milestones
+  // ----------------------------------------------------
+  const amitEvents = LifeEventPredictionService.predictForCustomer('cust_amit');
+  const hasStressEvent = amitEvents.predictions.some((p) => p.category === 'STRESS_RELIEF');
+  const recommendsNoLoans = !amitEvents.predictions.some(
+    (p) => p.recommendation.product_type === 'LOAN' || p.recommendation.product_type === 'CREDIT_CARD'
+  );
+  assert(
+    hasStressEvent && recommendsNoLoans,
+    'TEST 10: Financially stressed customer detects STRESS_RELIEF milestone and strictly bans predatory loan cross-sells',
+    `Has stress milestone: ${hasStressEvent}, Bans loans: ${recommendsNoLoans}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 11: DPDPA Consent Privacy for Life Events
+  // ----------------------------------------------------
+  const rahulConsent = db.findOne('consents', (c) => c.customer_id === 'cust_rahul');
+  if (rahulConsent) {
+    db.update('consents', rahulConsent.id, { personalized_recommendations: false });
+  }
+
+  const suppressedLifeEvents = LifeEventPredictionService.predictForCustomer('cust_rahul');
+  assert(
+    suppressedLifeEvents.consent_restricted === true && suppressedLifeEvents.predictions.length === 0,
+    'TEST 11: Turning OFF DPDPA personalization consent strictly suppresses Life Event Predictions',
+    `Consent restricted: ${suppressedLifeEvents.consent_restricted}, Count: ${suppressedLifeEvents.predictions.length}`
+  );
+
+  // Restore consent
+  if (rahulConsent) {
+    db.update('consents', rahulConsent.id, { personalized_recommendations: true });
+  }
 
   // ----------------------------------------------------
   // SUMMARY

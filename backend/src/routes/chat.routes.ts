@@ -2,8 +2,21 @@ import { Router, Response } from 'express';
 import { db } from '../db/database.js';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import { VernacularEngine } from '../engines/vernacular.js';
+import { GeminiService } from '../services/gemini.service.js';
 
 const router = Router();
+
+// GET /api/chat/brief - Feature 1: Daily AI Banking Briefing (Customer only)
+router.get('/brief', authenticate, (req: AuthenticatedRequest, res: Response): any => {
+  const customerId = req.user?.customerId;
+  if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile found.' });
+
+  const brief = GeminiService.generateDailyBrief(customerId, req.query.lang as string);
+  return res.json({
+    success: true,
+    brief,
+  });
+});
 
 // GET /api/chat/history - Retrieve recent conversation history
 router.get('/history', authenticate, (req: AuthenticatedRequest, res: Response): any => {
@@ -79,6 +92,8 @@ router.post('/', authenticate, async (req: AuthenticatedRequest, res: Response):
       language: response.language,
       intent: response.intent,
       verified_data: response.verified_data,
+      proactive_insight: response.proactive_insight,
+      coaching_advice: response.coaching_advice,
       suggested_actions: response.suggested_actions,
       deep_link: response.deep_link,
       model_used: response.model_used,

@@ -9,6 +9,11 @@ export interface VernacularChatResponse {
   intent: string;
   verified_data: any;
   suggested_actions?: string[];
+  proactive_insight?: string;
+  coaching_advice?: {
+    why_this_advice: string;
+    expected_benefit: string;
+  };
   deep_link?: string;
   model_used?: string;
 }
