@@ -150,10 +150,10 @@ export const DashboardPage: React.FC = () => {
               <span className="text-xs text-blue-200">NPCI Certified • Bharat 2026</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-              Namaste, {user?.name || 'Customer'}!
+              {t('dashboard_welcome')}, {user?.name || 'Customer'}!
             </h2>
             <p className="text-xs sm:text-sm text-blue-100 max-w-2xl leading-relaxed">
-              FinPulse AI continuously mirrors your transactional cashflow, calculates your real-time debt safety limits, and ensures you only receive ethical financial opportunities with complete transparency.
+              {t('dashboard_banner_desc')}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -162,7 +162,7 @@ export const DashboardPage: React.FC = () => {
               to="/twin"
               className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
             >
-              Inspect AI Twin →
+              {t('inspect_twin')}
             </Link>
           </div>
         </div>
@@ -172,9 +172,9 @@ export const DashboardPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-xs">
         <div>
           <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <span>Linked Account Details</span>
+            <span>{t('linked_account_details')}</span>
             <span className="w-1 h-1 rounded-full bg-slate-300" />
-            <span className="text-emerald-700 font-semibold">Active & KYC Verified</span>
+            <span className="text-emerald-700 font-semibold">{t('active_kyc_verified')}</span>
           </div>
           <p className="text-xs sm:text-sm text-slate-700 mt-1 font-medium">
             UPI ID: <span className="text-blue-700 font-mono font-bold">{account?.upi_id || 'user@bharatpay'}</span> | Account No: <span className="font-mono text-slate-900 font-bold">•••• •••• {account?.account_number.slice(-4) || '8172'}</span> ({account?.account_type || 'Savings'})
@@ -212,7 +212,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div className="text-[11px] text-emerald-700 mt-1.5 flex items-center gap-1 font-semibold">
             <ArrowUpRight className="w-3.5 h-3.5" />
-            <span>Instant Liquid Availability</span>
+            <span>{t('instant_liquid_availability')}</span>
           </div>
         </div>
 

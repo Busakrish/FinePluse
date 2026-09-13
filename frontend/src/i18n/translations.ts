@@ -23,7 +23,13 @@ export const translations = {
     nav_audit: 'Regulatory Audit Log',
     nav_logout: 'Logout',
     
-    // Dashboard Cards
+    // Sidebar Sections
+    sidebar_ai_banking: 'AI Banking Experience',
+    sidebar_accounts_services: 'Accounts & Services',
+    sidebar_risk_governance: 'Risk & AI Governance',
+    sidebar_customer_sandboxes: 'Customer Sandboxes',
+
+    // Dashboard Cards & Elements
     total_balance: 'Available Balance',
     monthly_income: 'Monthly Income',
     monthly_expenses: 'Monthly Expenses',
@@ -36,6 +42,17 @@ export const translations = {
     recent_transactions: 'Recent Transactions',
     spending_breakdown: 'Monthly Spending Breakdown',
     savings_growth: 'Savings Growth Trend',
+    linked_account_details: 'Linked Account Details',
+    active_kyc_verified: 'Active & KYC Verified',
+    inspect_twin: 'Inspect AI Twin →',
+    view_all_transactions: 'View all transactions →',
+    instant_liquid_availability: 'Instant Liquid Availability',
+    monthly_inflow_rate: 'Monthly Inflow Rate',
+    monthly_outflow: 'Monthly Outflow',
+    liquid_reserve_buffer: 'Liquid Reserve Buffer',
+    digital_passbook: 'Digital Banking Passbook',
+    dashboard_welcome: 'Namaste',
+    dashboard_banner_desc: 'FinPulse AI continuously mirrors your transactional cashflow, calculates your real-time debt safety limits, and ensures you only receive ethical financial opportunities with complete transparency.',
     
     // Actions
     send_money: 'Send Money',
@@ -58,6 +75,22 @@ export const translations = {
     dont_sell_me_title: "DON'T SELL ME MODE: ACTIVE",
     dont_sell_me_desc: "Commercial loan promotions are suppressed to safeguard your financial well-being. We offer empathetic repayment and budgeting assistance instead.",
     
+    // Assistant Elements
+    assistant_title: 'Vernacular AI Banking Copilot',
+    assistant_subtitle: 'Zero-hallucination conversational banking grounded in verified core accounts ledger',
+    assistant_input_placeholder: 'Ask in English, Hindi (हिन्दी), or Gujarati (ગુજરાતી)...',
+    assistant_clear_chat: 'Clear Chat',
+    assistant_daily_brief: 'Daily AI Banking Briefing',
+    assistant_explore_plan: 'Explore Plan',
+    assistant_open_screen: 'Open Screen',
+    assistant_verified_grounding: 'Verified Data Grounding',
+    assistant_ask_label: 'Ask:',
+    pill_balance: 'What is my current balance?',
+    pill_emi: 'When is my next EMI due?',
+    pill_spending: 'Show my spending breakdown',
+    pill_afford: 'Can I afford a new phone for ₹25,000?',
+    pill_fraud: 'How to freeze my card in emergency?',
+
     // Persona tags
     persona_healthy: 'Rahul Verma (Disciplined Saver)',
     persona_moderate: 'Priya Patel (Moderate Saver)',
@@ -90,6 +123,11 @@ export const translations = {
     nav_audit: 'नियामक ऑडिट लॉग',
     nav_logout: 'लॉग आउट',
 
+    sidebar_ai_banking: 'एआई बैंकिंग अनुभव',
+    sidebar_accounts_services: 'खाते एवं सेवाएं',
+    sidebar_risk_governance: 'जोखिम एवं एआई प्रशासन',
+    sidebar_customer_sandboxes: 'ग्राहक सैंडबॉक्स',
+
     total_balance: 'उपलब्ध शेष राशि',
     monthly_income: 'मासिक आय',
     monthly_expenses: 'मासिक व्यय',
@@ -102,6 +140,17 @@ export const translations = {
     recent_transactions: 'हाल के लेन-देन',
     spending_breakdown: 'मासिक खर्च विभाजन',
     savings_growth: 'बचत वृद्धि दर',
+    linked_account_details: 'लिंक्ड बैंक खाता विवरण',
+    active_kyc_verified: 'सक्रिय एवं KYC सत्यापित',
+    inspect_twin: 'एआई ट्विन देखें →',
+    view_all_transactions: 'सभी लेन-देन देखें →',
+    instant_liquid_availability: 'तत्काल उपलब्ध नकदी',
+    monthly_inflow_rate: 'मासिक आवक दर',
+    monthly_outflow: 'मासिक खर्च (व्यय)',
+    liquid_reserve_buffer: 'तरल आपातकालीन रिजर्व',
+    digital_passbook: 'डिजिटल बैंकिंग पासबुक',
+    dashboard_welcome: 'नमस्ते',
+    dashboard_banner_desc: 'फिनपल्स एआई आपके लेन-देन के नकदी प्रवाह का निरंतर विश्लेषण करता है, ऋण सुरक्षा सीमाओं की गणना करता है और पूर्ण पारदर्शिता सुनिश्चित करता है।',
 
     send_money: 'पैसे भेजें',
     request_money: 'पैसे मांगें',
@@ -121,6 +170,21 @@ export const translations = {
 
     dont_sell_me_title: "डोंट सेल मी मोड: सक्रिय (DON'T SELL ME MODE)",
     dont_sell_me_desc: "आपके वित्तीय स्वास्थ्य की रक्षा के लिए वाणिज्यिक ऋण विज्ञापनों को रोक दिया गया है। हम किश्त पुनर्गठन और बजट सहायता प्रदान कर रहे हैं।",
+
+    assistant_title: 'मातृभाषा एआई बैंकिंग सहायक',
+    assistant_subtitle: 'सत्यापित बैंक खाते के आधार पर शून्य-भ्रम (Zero-Hallucination) सुरक्षित एआई संवाद',
+    assistant_input_placeholder: 'हिन्दी (Devanagari / Hinglish), गुजराती या अंग्रेज़ी में पूछें...',
+    assistant_clear_chat: 'चैट साफ करें',
+    assistant_daily_brief: 'दैनिक एआई वित्तीय समीक्षा',
+    assistant_explore_plan: 'योजना देखें',
+    assistant_open_screen: 'स्क्रीन खोलें',
+    assistant_verified_grounding: 'सत्यापित डेटा आधार',
+    assistant_ask_label: 'पूछें:',
+    pill_balance: 'मेरा बैंक बैलेंस कितना है?',
+    pill_emi: 'मेरी अगली किश्त (EMI) कब देय है?',
+    pill_spending: 'मेरा मासिक खर्च विश्लेषण दिखाओ',
+    pill_afford: 'क्या मैं ₹25,000 का नया फोन खरीद सकता हूँ?',
+    pill_fraud: 'आपातकाल में कार्ड फ्रीज कैसे करें?',
 
     persona_healthy: 'राहुल वर्मा (अनुशासित बचतकर्ता)',
     persona_moderate: 'प्रिया पटेल (मध्यम बचतकर्ता)',
@@ -153,6 +217,11 @@ export const translations = {
     nav_audit: 'ઓડિટ લોગ',
     nav_logout: 'લોગ આઉટ',
 
+    sidebar_ai_banking: 'એઆઈ બેંકિંગ અનુભવ',
+    sidebar_accounts_services: 'ખાતા અને સેવાઓ',
+    sidebar_risk_governance: 'જોખમ અને એઆઈ શાસન',
+    sidebar_customer_sandboxes: 'ગ્રાહક સેન્ડબોક્સ',
+
     total_balance: 'ઉપલબ્ધ બેલેન્સ',
     monthly_income: 'માસિક આવક',
     monthly_expenses: 'માસિક ખર્ચ',
@@ -165,6 +234,17 @@ export const translations = {
     recent_transactions: 'તાજેતરના વ્યવહારો',
     spending_breakdown: 'માસિક ખર્ચ વિશ્લેષણ',
     savings_growth: 'બચત વૃદ્ધિ દર',
+    linked_account_details: 'જોડાયેલ બેંક ખાતાની વિગત',
+    active_kyc_verified: 'સક્રિય અને KYC ચકાસાયેલ',
+    inspect_twin: 'AI ટ્વિન જુઓ →',
+    view_all_transactions: 'તમામ વ્યવહારો જુઓ →',
+    instant_liquid_availability: 'તાત્કાલિક ઉપલબ્ધ લિક્વિડિટી',
+    monthly_inflow_rate: 'માસિક આવક દર',
+    monthly_outflow: 'માસિક ખર્ચ',
+    liquid_reserve_buffer: 'ઇમરજન્સી લિક્વિડ બફર',
+    digital_passbook: 'ડિજિટલ બેંકિંગ પાસબુક',
+    dashboard_welcome: 'નમસ્તે',
+    dashboard_banner_desc: 'ફિનપલ્સ એઆઈ તમારા કેશફ્લોનું સતત વિશ્લેષણ કરે છે, દેવાની સુરક્ષા મર્યાદા ગણે છે અને સંપૂર્ણ પારદર્શિતા સુનિશ્ચિત કરે છે.',
 
     send_money: 'પૈસા મોકલો',
     request_money: 'પૈસા મંગાવો',
@@ -184,6 +264,21 @@ export const translations = {
 
     dont_sell_me_title: "ડોન્ટ સેલ મી મોડ: સક્રિય (DON'T SELL ME MODE)",
     dont_sell_me_desc: "તમારી આર્થિક સુરક્ષા માટે વ્યાપારી લોન જાહેરાતો રોકી દેવામાં આવી છે. અમે હપ્તા ઘટાડવા અને બજેટિંગ સહાય પ્રદાન કરીએ છીએ.",
+
+    assistant_title: 'દેશી એઆઈ બેંકિંગ સહાયક',
+    assistant_subtitle: 'ચકાસાયેલ બેંક ખાતા પર આધારિત શૂન્ય-ભ્રમણા (Zero-Hallucination) સુરક્ષિત એઆઈ',
+    assistant_input_placeholder: 'ગુજરાતી, હિન્દી અથવા અંગ્રેજીમાં તમારો પ્રશ્ન પૂછો...',
+    assistant_clear_chat: 'ચેટ સાફ કરો',
+    assistant_daily_brief: 'દૈનિક AI નાણાકીય સમીક્ષા',
+    assistant_explore_plan: 'યોજના જુઓ',
+    assistant_open_screen: 'સ્ક્રીન ખોલો',
+    assistant_verified_grounding: 'ચકાસાયેલ ડેટા આધાર',
+    assistant_ask_label: 'પૂછો:',
+    pill_balance: 'મારું બેલેન્સ કેટલું છે?',
+    pill_emi: 'મારી આગામી EMI ક્યારે છે?',
+    pill_spending: 'મારું ખર્ચ વિશ્લેષણ બતાવો',
+    pill_afford: 'શું હું ₹25,000 નો નવો ફોન ખરીદી શકું?',
+    pill_fraud: 'કટોકટીમાં કાર્ડ કેવી રીતે બ્લોક કરવું?',
 
     persona_healthy: 'રાહુલ વર્મા (શિસ્તબદ્ધ બચતકાર)',
     persona_moderate: 'પ્રિયા પટેલ (સામાન્ય બચતકાર)',

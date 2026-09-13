@@ -33,24 +33,42 @@ router.get('/history', authenticate, (req: AuthenticatedRequest, res: Response):
   });
 });
 
+// DELETE /api/chat/history - Clear customer chat history
+router.delete('/history', authenticate, (req: AuthenticatedRequest, res: Response): any => {
+  const customerId = req.user?.customerId;
+  if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile found.' });
+
+  const messages = db.filter('chat_messages', (m) => m.session_id === `ses_${customerId}`);
+  for (const msg of messages) {
+    db.delete('chat_messages', msg.id);
+  }
+
+  return res.json({ success: true, message: 'Chat history cleared' });
+});
+
 // POST /api/chat - Conversational Banking Assistant
 router.post('/', authenticate, async (req: AuthenticatedRequest, res: Response): Promise<any> => {
   const customerId = req.user?.customerId;
   if (!customerId) return res.status(400).json({ success: false, error: 'No customer profile found.' });
 
-  const { message, language } = req.body;
+  const { message, language, history } = req.body;
   if (!message || typeof message !== 'string') {
     return res.status(400).json({ success: false, error: 'Message text is required.' });
   }
 
-  // Retrieve existing conversation history for context memory
-  const previousMessages = db
-    .filter('chat_messages', (m) => m.session_id === `ses_${customerId}`)
-    .slice(-8)
-    .map((m) => ({
-      sender: m.sender as 'USER' | 'ASSISTANT',
-      content: m.content,
-    }));
+  // Retrieve existing conversation history for context memory (from client payload or DB session)
+  const previousMessages = Array.isArray(history) && history.length > 0
+    ? history.slice(-8).map((m: any) => ({
+        sender: m.sender as 'USER' | 'ASSISTANT',
+        content: m.content,
+      }))
+    : db
+        .filter('chat_messages', (m) => m.session_id === `ses_${customerId}`)
+        .slice(-8)
+        .map((m) => ({
+          sender: m.sender as 'USER' | 'ASSISTANT',
+          content: m.content,
+        }));
 
   // Process via Vernacular Engine with Gemini 2.5 Flash & Verified Backend Data Pipeline
   const response = await VernacularEngine.processQueryWithGemini(

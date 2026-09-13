@@ -41,7 +41,7 @@ export const Sidebar: React.FC = () => {
   // Retail citizen banking navigation items (Only for regular customers)
   const customerNavItems = [
     { to: '/', label: t('nav_dashboard'), icon: LayoutDashboard, badge: 'Core' },
-    { to: '/assistant', label: 'AI Banking Copilot', icon: BotMessageSquare, badge: 'Copilot' },
+    { to: '/assistant', label: t('nav_assistant'), icon: BotMessageSquare, badge: 'Copilot' },
     { to: '/life-events', label: t('nav_life_events') || 'Life Event Prediction AI', icon: Compass, badge: 'Engine 3' },
     { to: '/spending-coach', label: t('nav_spending_coach') || 'AI Spending Coach', icon: PieChart, badge: 'Coach' },
     { to: '/what-if', label: t('nav_whatif'), icon: Sliders, badge: 'Engine 6' },
@@ -81,7 +81,7 @@ export const Sidebar: React.FC = () => {
               <div className="flex items-center gap-1.5 px-3 mb-2">
                 <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
                 <span className="text-[11px] font-black text-purple-800 uppercase tracking-wider">
-                  Risk & AI Governance
+                  {t('sidebar_risk_governance')}
                 </span>
               </div>
               <nav className="space-y-1">
@@ -117,7 +117,7 @@ export const Sidebar: React.FC = () => {
             <div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2 flex items-center gap-1.5">
                 <Eye className="w-3.5 h-3.5 text-slate-400" />
-                <span>Customer Sandboxes</span>
+                <span>{t('sidebar_customer_sandboxes')}</span>
               </div>
               <nav className="space-y-1">
                 {adminInspectionItems.map((item) => {
@@ -149,7 +149,7 @@ export const Sidebar: React.FC = () => {
           <div className="space-y-4">
             <div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
-                AI Banking Experience
+                {t('sidebar_ai_banking')}
               </div>
               <nav className="space-y-1">
                 {customerNavItems.map((item) => {
@@ -185,7 +185,7 @@ export const Sidebar: React.FC = () => {
 
             <div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
-                Accounts &amp; Services
+                {t('sidebar_accounts_services')}
               </div>
               <nav className="space-y-1">
                 {customerSecondaryNavItems.map((item) => {

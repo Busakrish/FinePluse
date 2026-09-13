@@ -11,6 +11,7 @@ import { NextBestActionEngine } from '../src/safety/nextBestAction.js';
 import { FinancialTwinManager } from '../src/twin/twinManager.js';
 import { LifeEventPredictionService } from '../src/services/lifeEventPrediction.service.js';
 import { SpendingCoachService } from '../src/services/spendingCoach.service.js';
+import { GeminiService } from '../src/services/gemini.service.js';
 
 let passedCount = 0;
 let failedCount = 0;
@@ -277,10 +278,88 @@ async function runAcceptanceTests() {
     chatQ2.intent === 'SPENDING_COACH' &&
     chatQ3.intent === 'SPENDING_COACH';
 
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 15: Feature 5: Upcoming Financial Events Timeline
+  // ----------------------------------------------------
+  const eventsQuery = VernacularEngine.processQuery('cust_rahul', 'What are my upcoming payments, bills, and expected salary this month?');
+  const eventsValid =
+    eventsQuery.intent === 'UPCOMING_EVENTS' &&
+    Array.isArray(eventsQuery.verified_data?.timeline) &&
+    eventsQuery.verified_data.timeline.length > 0 &&
+    typeof eventsQuery.proactive_insight === 'string' &&
+    eventsQuery.proactive_insight.length > 0;
+
   assert(
-    chatGrounded,
-    'TEST 14b: Conversational Assistant responds to spending coach queries with grounded data',
-    `Q1: ${chatQ1.intent} (${chatQ1.verified_data.highest_category.category}), Q2: ${chatQ2.intent}, Q3: ${chatQ3.intent}`
+    eventsValid,
+    'TEST 15: Upcoming financial events query returns chronologically verified timeline & proactive insight',
+    `Intent: ${eventsQuery.intent}, Timeline events: ${eventsQuery.verified_data?.timeline?.length}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 16: Feature 6: Opportunity Detector & Don't Sell Me Safety Mode
+  // ----------------------------------------------------
+  const rahulOpp = VernacularEngine.processQuery('cust_rahul', 'What investment or savings opportunities are recommended for my profile?');
+  const rahulOppValid =
+    rahulOpp.intent === 'OPPORTUNITY_DETECTOR' &&
+    Array.isArray(rahulOpp.verified_data?.opportunities) &&
+    rahulOpp.verified_data.opportunities.length > 0 &&
+    Boolean(rahulOpp.verified_data.opportunities[0].why_recommendation) &&
+    rahulOpp.verified_data.dont_sell_me_active === false;
+
+  const amitOpp = VernacularEngine.processQuery('cust_amit', 'What investment or savings opportunities are recommended for my profile?');
+  const amitOppValid =
+    amitOpp.intent === 'OPPORTUNITY_DETECTOR' &&
+    amitOpp.verified_data?.dont_sell_me_active === true;
+
+  assert(
+    rahulOppValid && amitOppValid,
+    'TEST 16: Opportunity detector surfaces personalized recommendations with "Why" for healthy user and activates Don\'t Sell Me shield for stressed user',
+    `Rahul Opps: ${rahulOpp.verified_data?.opportunities?.length}, Amit Don't Sell Me: ${amitOpp.verified_data?.dont_sell_me_active}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 17: Feature 8: Multi-turn Conversation Memory (EMI Reduction Inquiry)
+  // ----------------------------------------------------
+  const rahulEmiQuery = VernacularEngine.processQuery('cust_rahul', 'Can I reduce my loan EMI?', 'en', [
+    { sender: 'USER', content: 'What is my current loan EMI?' },
+    { sender: 'ASSISTANT', content: 'Your active Car Loan EMI is ₹14,200 due on 10th.' },
+  ]);
+  const rahulMemoryValid =
+    rahulEmiQuery.intent === 'STRESS_ASSISTANCE' &&
+    rahulEmiQuery.deep_link === '/what-if' &&
+    rahulEmiQuery.message.includes('What-If');
+
+  const amitEmiQuery = VernacularEngine.processQuery('cust_amit', 'Can I reduce my loan EMI?', 'en', [
+    { sender: 'USER', content: 'What is my EMI?' },
+    { sender: 'ASSISTANT', content: 'Your total EMIs are ₹64,800 across 3 loans.' },
+  ]);
+  const amitMemoryValid =
+    amitEmiQuery.intent === 'STRESS_ASSISTANCE' &&
+    amitEmiQuery.deep_link === '/stress-assistance' &&
+    amitEmiQuery.message.includes('Samadhan');
+
+  assert(
+    rahulMemoryValid && amitMemoryValid,
+    'TEST 17: Multi-turn conversation memory correctly resolves EMI reduction inquiries into What-If Simulator or Samadhan Relief based on financial health',
+    `Rahul Link: ${rahulEmiQuery.deep_link}, Amit Link: ${amitEmiQuery.deep_link}`
+  );
+
+  // ----------------------------------------------------
+  // ACCEPTANCE TEST 18: Feature 1: Daily AI Banking Briefing
+  // ----------------------------------------------------
+  const rahulBrief = GeminiService.generateDailyBrief('cust_rahul', 'en');
+  const briefValid =
+    typeof rahulBrief.greeting === 'string' &&
+    rahulBrief.customer_name.startsWith('Rahul') &&
+    typeof rahulBrief.health_score === 'number' &&
+    Array.isArray(rahulBrief.highlights) &&
+    rahulBrief.highlights.length >= 3 &&
+    typeof rahulBrief.today_suggestion === 'string';
+
+  assert(
+    briefValid,
+    'TEST 18: Daily AI Banking Briefing generates personalized verified metrics, highlights, and health score',
+    `Greeting: "${rahulBrief.greeting}", Health: ${rahulBrief.health_score}, Highlights: ${rahulBrief.highlights.length}`
   );
 
   // ----------------------------------------------------

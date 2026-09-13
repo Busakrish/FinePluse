@@ -3,7 +3,7 @@
     {
       "id": "usr_rahul",
       "email": "rahul@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-01-10T10:00:00.000Z",
       "updated_at": "2026-01-10T10:00:00.000Z"
@@ -11,7 +11,7 @@
     {
       "id": "usr_priya",
       "email": "priya@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-01-12T11:00:00.000Z",
       "updated_at": "2026-01-12T11:00:00.000Z"
@@ -19,7 +19,7 @@
     {
       "id": "usr_amit",
       "email": "amit@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-01-15T09:30:00.000Z",
       "updated_at": "2026-01-15T09:30:00.000Z"
@@ -27,7 +27,7 @@
     {
       "id": "usr_vikram",
       "email": "vikram@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-01-20T14:15:00.000Z",
       "updated_at": "2026-01-20T14:15:00.000Z"
@@ -35,7 +35,7 @@
     {
       "id": "usr_ramesh",
       "email": "ramesh@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-02-01T08:45:00.000Z",
       "updated_at": "2026-02-01T08:45:00.000Z"
@@ -43,7 +43,7 @@
     {
       "id": "usr_sunita",
       "email": "sunita@finpulse.bharat",
-      "password_hash": "$2a$10$TtqJV2g23DuRS76NE06gyuXmbmQSeOqeA21moQnZkBKtBiBkN71g6",
+      "password_hash": "$2a$10$Tj3qSL0cPCDhBuTd7dW2KOM.DLd5Usyq5G9szJWXVt2RyKGJEhDCe",
       "role": "CUSTOMER",
       "created_at": "2026-02-05T12:00:00.000Z",
       "updated_at": "2026-02-05T12:00:00.000Z"
@@ -51,7 +51,7 @@
     {
       "id": "usr_admin",
       "email": "admin@finpulse.bharat",
-      "password_hash": "$2a$10$AXtE1R5ond/NFcthNg.GXOOFzrrudhB1D72raORRQ92FWHDiDP4xa",
+      "password_hash": "$2a$10$6WSsnbKe1aAlo330mueU7eKPfFYNRpEFIK4NIf39AhVfcNnAgxTkK",
       "role": "ADMIN",
       "created_at": "2026-01-01T00:00:00.000Z",
       "updated_at": "2026-01-01T00:00:00.000Z"
@@ -892,7 +892,7 @@
       "financial_health_analysis": true,
       "personalized_recommendations": true,
       "marketing_personalization": true,
-      "updated_at": "2026-09-12T09:55:09.315Z"
+      "updated_at": "2026-09-13T04:29:55.682Z"
     },
     {
       "id": "con_priya",
@@ -959,7 +959,7 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     },
     {
       "id": "twin_priya",
@@ -979,7 +979,7 @@
       "behavioral_segment": "ASPIRATIONAL_BORROWER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     },
     {
       "id": "twin_amit",
@@ -999,7 +999,7 @@
       "behavioral_segment": "VULNERABLE_BORROWER",
       "dont_sell_me_active": true,
       "guardian_status": "HELP",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     },
     {
       "id": "twin_vikram",
@@ -1019,7 +1019,7 @@
       "behavioral_segment": "TRANSACTIONAL_USER",
       "dont_sell_me_active": false,
       "guardian_status": "PROTECT",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     },
     {
       "id": "twin_ramesh",
@@ -1039,7 +1039,7 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     },
     {
       "id": "twin_sunita",
@@ -1059,7 +1059,7 @@
       "behavioral_segment": "DISCIPLINED_SAVER",
       "dont_sell_me_active": false,
       "guardian_status": "RECOMMEND",
-      "last_evaluated_at": "2026-09-12T09:55:09.280Z"
+      "last_evaluated_at": "2026-09-13T04:29:55.583Z"
     }
   ],
   "ai_insights": [
@@ -1295,7 +1295,7 @@
   "chat_messages": [],
   "what_if_simulations": [
     {
-      "id": "sim_1789206909304_hi4u",
+      "id": "sim_1789273795638_92vv",
       "customer_id": "cust_sunita",
       "simulation_type": "TAKE_LOAN",
       "input_params": {
@@ -1326,7 +1326,7 @@
       },
       "safety_assessment": "HIGH_RISK",
       "ai_guidance": "Taking a ₹5,00,000 loan will add an EMI of ₹16,251/mo, pushing your debt burden to 40.5% of income. This creates severe liquidity risk.",
-      "created_at": "2026-09-12T09:55:09.304Z"
+      "created_at": "2026-09-13T04:29:55.638Z"
     }
   ],
   "notifications": [
@@ -1416,8 +1416,8 @@
       "timestamp": "2026-09-11T02:46:00.000Z"
     },
     {
-      "id": "audit_1789206909302_y34y6",
-      "timestamp": "2026-09-12T09:55:09.302Z",
+      "id": "audit_1789273795632_loigw",
+      "timestamp": "2026-09-13T04:29:55.632Z",
       "customer_id": "cust_amit",
       "event_type": "POLICY_GATEWAY_BLOCK",
       "ai_engine": "SAFETY_GATEWAY",

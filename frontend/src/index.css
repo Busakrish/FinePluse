@@ -22,13 +22,16 @@ body {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
@@ -73,15 +76,166 @@ body {
 
 /* Login error shake animation */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  15%       { transform: translateX(-6px); }
-  30%       { transform: translateX(6px); }
-  45%       { transform: translateX(-5px); }
-  60%       { transform: translateX(5px); }
-  75%       { transform: translateX(-3px); }
-  90%       { transform: translateX(3px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  15% {
+    transform: translateX(-6px);
+  }
+
+  30% {
+    transform: translateX(6px);
+  }
+
+  45% {
+    transform: translateX(-5px);
+  }
+
+  60% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+
+  90% {
+    transform: translateX(3px);
+  }
 }
 
 .animate-shake {
   animation: shake 0.45s ease-in-out;
+}
+
+/* ==========================================================================
+   AI Assistant / Chat Bot - Size, Height & Visibility Enhancements
+   ========================================================================== */
+
+/* 1. Ensure the main container allows scrolling and full height */
+main {
+  overflow-y: auto !important;
+}
+
+main:has(.rounded-3xl.overflow-y-auto),
+main:has(form input[placeholder*="Ask naturally"]),
+main:has(form input[placeholder*="यहाँ पूछें"]),
+main:has(form input[placeholder*="ગુજરાતીમાં લખો"]) {
+  overflow-y: auto !important;
+  max-width: 1200px !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+/* 2. Expand Assistant Page wrapper width and height */
+div.max-w-4xl:has(.rounded-3xl.overflow-y-auto),
+div.max-w-4xl:has(form input[placeholder*="Ask naturally"]),
+div.max-w-4xl:has(form input[placeholder*="यहाँ पूछें"]),
+div.max-w-4xl:has(form input[placeholder*="ગુજરાતીમાં લખો"]) {
+  max-width: 100% !important;
+  width: 100% !important;
+  min-height: calc(100vh - 120px) !important;
+  height: auto !important;
+}
+
+/* 3. Primary Chat Messages Container - Substantially increased height so it is clearly visible */
+.rounded-3xl.overflow-y-auto {
+  min-height: 540px !important;
+  height: 58vh !important;
+  max-height: none !important;
+  flex: 1 0 540px !important;
+  flex-shrink: 0 !important;
+  padding: 1.5rem !important;
+}
+
+.rounded-3xl.overflow-y-auto~form {
+  flex-shrink: 0 !important;
+}
+
+/* 4. Chat Message Bubbles & Typography Size */
+.rounded-3xl.overflow-y-auto .rounded-2xl {
+  font-size: 0.95rem !important;
+  line-height: 1.65 !important;
+  padding: 1.125rem 1.35rem !important;
+}
+
+.rounded-3xl.overflow-y-auto .rounded-2xl p {
+  font-size: 0.95rem !important;
+  line-height: 1.65 !important;
+}
+
+/* 5. Sub-cards inside assistant messages (Insights, Coach Advice, Reports, Timelines) */
+.rounded-3xl.overflow-y-auto .rounded-xl,
+.rounded-3xl.overflow-y-auto .rounded-2xl.bg-gradient-to-br {
+  font-size: 0.875rem !important;
+}
+
+.rounded-3xl.overflow-y-auto .rounded-xl span,
+.rounded-3xl.overflow-y-auto .rounded-xl p,
+.rounded-3xl.overflow-y-auto .rounded-2xl span,
+.rounded-3xl.overflow-y-auto .rounded-2xl p {
+  font-size: 0.875rem !important;
+}
+
+/* 6. Message timestamp, tags, intent badges */
+.rounded-3xl.overflow-y-auto .text-\[10px\],
+.rounded-3xl.overflow-y-auto .text-\[11px\] {
+  font-size: 0.775rem !important;
+}
+
+/* 7. Avatars sizing */
+.rounded-3xl.overflow-y-auto>div>div.w-8.h-8 {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  min-width: 2.25rem !important;
+}
+
+.rounded-3xl.overflow-y-auto>div>div.w-8.h-8 svg {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+}
+
+/* 8. Chat Message Bubble width */
+.rounded-3xl.overflow-y-auto>div>div.max-w-\[88\%\] {
+  max-width: 85% !important;
+}
+
+/* 9. Input Form & Send Button Size */
+form:has(input[placeholder*="Ask naturally"]),
+form:has(input[placeholder*="यहाँ पूछें"]),
+form:has(input[placeholder*="ગુજરાતીમાં લખો"]) {
+  gap: 0.75rem !important;
+  margin-top: 0.25rem !important;
+}
+
+form input[placeholder*="Ask naturally"],
+form input[placeholder*="यहाँ पूछें"],
+form input[placeholder*="ગુજરાતીમાં લખો"] {
+  font-size: 0.95rem !important;
+  padding: 1rem 2.75rem 1rem 1.25rem !important;
+  border-radius: 1rem !important;
+}
+
+form:has(input[placeholder*="Ask naturally"]) button[type="submit"],
+form:has(input[placeholder*="यहाँ पूछें"]) button[type="submit"],
+form:has(input[placeholder*="ગુજરાતીમાં લખો"]) button[type="submit"] {
+  font-size: 0.95rem !important;
+  padding: 1rem 1.75rem !important;
+  border-radius: 1rem !important;
+}
+
+/* 10. Quick Action Exploration Pills Size */
+div:has(> .rounded-3xl.overflow-y-auto)>div.flex.items-center.overflow-x-auto button,
+div.flex.items-center.gap-1\.5.overflow-x-auto button {
+  font-size: 0.825rem !important;
+  padding: 0.375rem 0.85rem !important;
+}
+
+/* 11. Daily AI Banking Brief Card - Keep it neat and scrollable if open */
+div:has(> .rounded-3xl.overflow-y-auto)>div.bg-gradient-to-br {
+  max-height: 200px !important;
+  overflow-y: auto !important;
 }
